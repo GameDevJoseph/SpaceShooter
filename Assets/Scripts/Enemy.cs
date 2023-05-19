@@ -5,13 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float _enemySpeed = 4f;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    
     void Update()
     {
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
@@ -29,8 +23,12 @@ public class Enemy : MonoBehaviour
         
         if (other.CompareTag("Player"))
         {
-            //damage player
-            Destroy(other.gameObject);
+            Player player = other.GetComponent<Player>();
+            if (player == null)
+                return; 
+
+            other.GetComponent<Player>().Damage();
+            Destroy(this.gameObject);
         }
 
         if(other.CompareTag("Laser"))
@@ -38,8 +36,5 @@ public class Enemy : MonoBehaviour
             Destroy(other.gameObject);
             Destroy(this.gameObject);
         }
-            
-
-
     }
 }
