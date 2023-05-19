@@ -13,8 +13,12 @@ public class Player : MonoBehaviour
     [SerializeField] float _rightBounary = 11.5f;
     [SerializeField] float _bottomBoundary = -3.5f;
 
+    [SerializeField] GameObject _laserPrefab;
+    [SerializeField] Vector3 _laserSpawnOffset;
 
+    [SerializeField] float _fireRate = 0.5f;
 
+    float _canFire = -1f;
     Vector3 newPosition;
 
     private void Awake()
@@ -34,14 +38,23 @@ public class Player : MonoBehaviour
     {
         CalculateMovement();
 
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+            FireLaser();
+        
+    }
+
+    void FireLaser()
+    {
+        _canFire = Time.time + _fireRate;
+        Instantiate(_laserPrefab, transform.position + _laserSpawnOffset, Quaternion.identity);
     }
 
     void CalculateMovement()
     {
-        //sets a local variable for direction to current vector3 input
+        //sets a local variable for direction to current vector3 input using new input system
         var direction = _playerInput.actions["Move"].ReadValue<Vector2>();
 
-        //move the player using local direction variable
+        //move the player using local direction variable with move speed at real time
         transform.Translate(direction * _moveSpeed * Time.deltaTime);
 
 
