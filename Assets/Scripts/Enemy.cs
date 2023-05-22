@@ -17,23 +17,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        
-        
-        if (other.CompareTag("Player"))
-        {
-            Player player = other.GetComponent<Player>();
-            if (player == null)
-                return; 
 
-            other.GetComponent<Player>().Damage();
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            Player player = collision.GetComponent<Player>();
+            if (player == null)
+                return;
+
+            collision.GetComponent<Player>().Damage();
             Destroy(this.gameObject);
         }
 
-        if(other.CompareTag("Laser"))
+        if (collision.CompareTag("Laser"))
         {
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
             Destroy(this.gameObject);
         }
     }
