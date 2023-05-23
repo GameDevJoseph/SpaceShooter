@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     [SerializeField] int _lives = 3;
     [SerializeField] float _moveSpeed = 3.5f;
     [SerializeField] float _speedMultiplier = 2;
+    [SerializeField] int _score;
 
     [Header("Player Boundaries")]
     [SerializeField] float _leftBoundary = -11.5f;
@@ -23,20 +24,28 @@ public class Player : MonoBehaviour
 
     [Header("Powerup Data")]
     [SerializeField] GameObject _tripleShotPrefab;
-    [SerializeField] bool _isTripleShotActive = false;
-    [SerializeField] bool _isSpeedBoostActive = false;
+    [SerializeField] GameObject _shieldVisualizer;
+    
 
 
+
+    bool _isTripleShotActive = false;
+    bool _isSpeedBoostActive = false;
+    bool _isShieldActive = false;
     SpawnManager _spawnManager;
     float _canFire = -1f;
-
+    UIManager _uiManager;
 
     void Start()
     {
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        _uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
 
         if (_spawnManager == null)
             Debug.LogError("The Spawn Manager is null");
+
+        if (_uiManager == null)
+            Debug.LogError("UIManager is null");
 
         transform.position = Vector3.zero;
     }
@@ -94,6 +103,13 @@ public class Player : MonoBehaviour
 
     public void Damage()
     {
+        if(_isShieldActive)
+        {
+            _isShieldActive = false;
+            _shieldVisualizer.SetActive(false);
+            return;
+        }
+
         _lives--;
 
         if (_lives < 1)
@@ -115,6 +131,12 @@ public class Player : MonoBehaviour
         StartCoroutine(SpeeedBoostDownRoutine());
     }
 
+    public void ShieldsActive()
+    {
+        _isShieldActive = true;
+        _shieldVisualizer?.SetActive(true);
+    }
+
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5);
@@ -125,5 +147,11 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5);
         _isSpeedBoostActive = false;
+    }
+
+    public void AddToScore(int amount)
+    {
+        _score += amount;
+        _uiManager.UpdateScore(_score);
     }
 }
