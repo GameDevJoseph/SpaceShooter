@@ -6,11 +6,19 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] float _enemySpeed = 4f;
 
+    Animator _animator;
     Player _player;
 
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         _player = GameObject.Find("Player").GetComponent<Player>();
+
+        if (_animator == null)
+            Debug.LogError("Enemy Animator is Null");
+
+        if (_player == null)
+            Debug.LogError("Player is Null");
     }
     void Update()
     {
@@ -32,18 +40,22 @@ public class Enemy : MonoBehaviour
             if (player == null)
                 return;
 
+            _animator.SetTrigger("OnEnemyDeath");
+            _enemySpeed = 0f;
             collision.GetComponent<Player>().Damage();
-            Destroy(this.gameObject);
+            Destroy(this.gameObject, 2.8f);
         }
 
         if (collision.CompareTag("Laser"))
         {
+            _animator.SetTrigger("OnEnemyDeath");
             Destroy(collision.gameObject);
             
             if(_player != null)
                 _player.AddToScore(10);
 
-            Destroy(this.gameObject);
+            _enemySpeed = 0;
+            Destroy(this.gameObject, 2.8f);
         }
     }
 }
