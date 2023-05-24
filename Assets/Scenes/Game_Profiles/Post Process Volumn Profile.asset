@@ -1329,19 +1329,19 @@ MonoBehaviour:
     value: 1
   filtering:
     overrideState: 1
-    value: {x: 50, y: 95}
+    value: {x: 54.000004, y: 99}
   minLuminance:
     overrideState: 1
-    value: -1.1
+    value: -1.6
   maxLuminance:
     overrideState: 1
-    value: 2.7
+    value: 3
   keyValue:
     overrideState: 1
     value: 0.98
   eyeAdaptation:
     overrideState: 1
-    value: 0
+    value: 1
   speedUp:
     overrideState: 1
     value: 2

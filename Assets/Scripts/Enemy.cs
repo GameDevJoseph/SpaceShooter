@@ -5,12 +5,15 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField] float _enemySpeed = 4f;
+    [SerializeField] AudioSource _audioSource;
+    [SerializeField] AudioClip _explosionAudio;
 
     Animator _animator;
     Player _player;
 
     private void Start()
     {
+        _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("Player").GetComponent<Player>();
 
@@ -19,6 +22,11 @@ public class Enemy : MonoBehaviour
 
         if (_player == null)
             Debug.LogError("Player is Null");
+
+        if (_audioSource == null)
+            Debug.LogError("Audio Source is null");
+        else
+            _audioSource.clip = _explosionAudio;
     }
     void Update()
     {
@@ -42,6 +50,7 @@ public class Enemy : MonoBehaviour
 
             _animator.SetTrigger("OnEnemyDeath");
             _enemySpeed = 0f;
+            _audioSource.Play();
             collision.GetComponent<Player>().Damage();
             Destroy(this.gameObject, 2.8f);
         }
@@ -49,6 +58,7 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("Laser"))
         {
             _animator.SetTrigger("OnEnemyDeath");
+            _audioSource.Play();
             Destroy(collision.gameObject);
             
             if(_player != null)

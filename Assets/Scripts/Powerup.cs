@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
-
-
-
     [SerializeField] float _speed = 3.0f;
     [SerializeField] int _powerupID;
+
+    [SerializeField] AudioClip _powerupAudio;
+
+    
     void Update()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
@@ -22,17 +23,20 @@ public class Powerup : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             Player player = collision.GetComponent<Player>();
+            AudioSource.PlayClipAtPoint(_powerupAudio, transform.position);
+
             if (player == null)
                 return;
 
             switch (_powerupID)
             {
-                case 0: player.TripleShotActive(); break;
+                case 0: player.TripleShotActive();  break;
                 case 1: player.SpeedBoostActive(); break;
                 case 2: player.ShieldsActive(); break;
                 default: break;
             }
 
+            
             Destroy(this.gameObject);
         }
     }
