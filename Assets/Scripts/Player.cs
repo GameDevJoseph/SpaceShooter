@@ -25,7 +25,10 @@ public class Player : MonoBehaviour
     [Header("Powerup Data")]
     [SerializeField] GameObject _tripleShotPrefab;
     [SerializeField] GameObject _shieldVisualizer;
-    
+
+    [Header("Engine Data")]
+    [SerializeField] GameObject _rightEngine;
+    [SerializeField] GameObject _leftEngine;
 
 
 
@@ -111,6 +114,12 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
+
+        if(_lives == 2)
+            _rightEngine.SetActive(true);
+        else if (_lives == 1)
+            _leftEngine.SetActive(true);
+
         _uiManager.UpdateLives(_lives);
 
         if (_lives < 1)
