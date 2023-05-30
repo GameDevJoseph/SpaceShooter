@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     [Header("Player Data")]
     [SerializeField] int _lives = 3;
     [SerializeField] float _moveSpeed = 3.5f;
+    [SerializeField] float _thrustSpeedMultipler = 1.5f;
     [SerializeField] float _speedMultiplier = 2;
     [SerializeField] int _score;
 
@@ -21,10 +22,12 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject _laserPrefab;
     [SerializeField] Vector3 _laserSpawnOffset;
     [SerializeField] float _fireRate = 0.5f;
+    [SerializeField] int _laserAmmoCount = 15;
 
     [Header("Powerup Data")]
     [SerializeField] GameObject _tripleShotPrefab;
     [SerializeField] GameObject _shieldVisualizer;
+    [SerializeField] int _shieldDurability = 3;
 
     [Header("Engine Data")]
     [SerializeField] GameObject _rightEngine;
@@ -33,6 +36,7 @@ public class Player : MonoBehaviour
     [Header("Audio")]
     [SerializeField] AudioSource _audioSource;
     [SerializeField] AudioClip _laserAudio;
+    [SerializeField] AudioClip _noLaserAmmo;
 
     bool _isTripleShotActive = false;
     bool _isSpeedBoostActive = false;
@@ -73,14 +77,22 @@ public class Player : MonoBehaviour
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
-
         if (_isTripleShotActive)
+        {
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
-        else
+        }
+        else if(_laserAmmoCount > 0)
+        {
             Instantiate(_laserPrefab, transform.position + _laserSpawnOffset, Quaternion.identity);
-
+            _laserAmmoCount--;
+            if (_laserAmmoCount <= 0)
+                _laserAmmoCount = 0;
+        }else if(_laserAmmoCount <= 0)
+        {
+            _audioSource.PlayOneShot(_noLaserAmmo);
+            return;
+        }
         _audioSource.Play();
-
     }
 
     void CalculateMovement()
@@ -89,8 +101,9 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
-
-        if(!_isSpeedBoostActive)
+        if (Input.GetKey(KeyCode.LeftShift))
+            transform.Translate(direction * (_moveSpeed * _thrustSpeedMultipler) * Time.deltaTime);
+        else if (!_isSpeedBoostActive)
             transform.Translate(direction * _moveSpeed * Time.deltaTime);
         else
             transform.Translate(direction * (_moveSpeed * _speedMultiplier) * Time.deltaTime);
@@ -118,8 +131,20 @@ public class Player : MonoBehaviour
     {
         if(_isShieldActive)
         {
-            _isShieldActive = false;
-            _shieldVisualizer.SetActive(false);
+            SpriteRenderer shieldRenderer = _shieldVisualizer.gameObject.GetComponent<SpriteRenderer>();
+            _shieldDurability--;
+
+            if (shieldRenderer == null)
+                return;
+
+            switch (_shieldDurability)
+            {
+                case 0: _isShieldActive = false; _shieldVisualizer.SetActive(false); break;
+                case 1: shieldRenderer.color = Color.red; break;
+                case 2: shieldRenderer.color = Color.yellow; break;
+                case 3: _shieldDurability--; break;
+                default: break;
+            }
             return;
         }
 
@@ -173,5 +198,18 @@ public class Player : MonoBehaviour
     {
         _score += amount;
         _uiManager.UpdateScore(_score);
+    }
+    
+    public void AddAmmo()
+    {
+        _laserAmmoCount = 15;
+    }
+    public void LifeUp()
+    {
+        if (_lives >= 3)
+            return;
+
+        _lives++;
+        _uiManager.UpdateLives(_lives);
     }
 }

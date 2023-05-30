@@ -1453,6 +1453,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lives: 3
   _moveSpeed: 5
+  _thrustSpeedMultipler: 1.5
   _speedMultiplier: 2
   _score: 0
   _leftBoundary: -11.3
@@ -1462,12 +1463,15 @@ MonoBehaviour:
   _laserPrefab: {fileID: 1479979475563592944, guid: 00821e323f808904da3a6159835006d1, type: 3}
   _laserSpawnOffset: {x: 0, y: 1.05, z: 0}
   _fireRate: 0.5
+  _laserAmmoCount: 15
   _tripleShotPrefab: {fileID: 5691644148810981265, guid: c422af5301d3ca2419ad0fdf35973c32, type: 3}
   _shieldVisualizer: {fileID: 2029234502}
+  _shieldDurability: 3
   _rightEngine: {fileID: 993486232}
   _leftEngine: {fileID: 871503941}
   _audioSource: {fileID: 1211833329}
   _laserAudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _noLaserAmmo: {fileID: 8300000, guid: 4713bd1aa40909943bf957fcc2bbe928, type: 3}
 --- !u!212 &1211833325
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2064,6 +2068,8 @@ MonoBehaviour:
   - {fileID: 9129231233770202940, guid: a1d9752ca3fb6fb46920703d8c9329bc, type: 3}
   - {fileID: 3824025122773302110, guid: 9e65aa5e5555c694393aa64a1a0e151b, type: 3}
   - {fileID: 4963910982457362289, guid: 224604070b86eab4aa933181f25e61d7, type: 3}
+  - {fileID: 6319147665907197547, guid: eb881cfe25929614b9565699846548a9, type: 3}
+  - {fileID: 7141807894994375453, guid: 77b9c7e47d35ce54a84c2796e3029273, type: 3}
   _powerupContainer: {fileID: 94263652}
 --- !u!4 &1988194212
 Transform:
