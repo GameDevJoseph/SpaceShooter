@@ -1467,6 +1467,7 @@ MonoBehaviour:
   _tripleShotPrefab: {fileID: 5691644148810981265, guid: c422af5301d3ca2419ad0fdf35973c32, type: 3}
   _shieldVisualizer: {fileID: 2029234502}
   _shieldDurability: 3
+  _MinePrefab: {fileID: 5113102619149882269, guid: 8de1d18eae1f8ff4e86b6bf3f44e6ea5, type: 3}
   _rightEngine: {fileID: 993486232}
   _leftEngine: {fileID: 871503941}
   _audioSource: {fileID: 1211833329}
@@ -1883,7 +1884,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1653210024
 MonoBehaviour:
@@ -2070,6 +2071,7 @@ MonoBehaviour:
   - {fileID: 4963910982457362289, guid: 224604070b86eab4aa933181f25e61d7, type: 3}
   - {fileID: 6319147665907197547, guid: eb881cfe25929614b9565699846548a9, type: 3}
   - {fileID: 7141807894994375453, guid: 77b9c7e47d35ce54a84c2796e3029273, type: 3}
+  minePowerup: {fileID: 8889988928938216175, guid: 4c90ee485fc991c468f90dc4c8efd448, type: 3}
   _powerupContainer: {fileID: 94263652}
 --- !u!4 &1988194212
 Transform:
@@ -2234,7 +2236,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2936349115991157697, guid: e013e74f404c7fa49a9e34c6a51c8d51, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2936349115991157697, guid: e013e74f404c7fa49a9e34c6a51c8d51, type: 3}
       propertyPath: m_LocalPosition.x

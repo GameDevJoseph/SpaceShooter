@@ -10,6 +10,7 @@ public class SpawnManager : MonoBehaviour
 
     [Header("Powerup Spawn Data")]
     [SerializeField] GameObject[] powerups;
+    [SerializeField] GameObject minePowerup;
     [SerializeField] GameObject _powerupContainer;
 
     bool _stopSpawning = false;
@@ -41,9 +42,16 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         while (!_stopSpawning)
         {
+            GameObject newPowerup;
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
-            GameObject randomPowerUp = powerups[Random.Range(0, powerups.Length)];
-            GameObject newPowerup = Instantiate(randomPowerUp, posToSpawn, Quaternion.identity);
+            int DiceRoll = Random.Range(0, 9);
+            if(DiceRoll >= 3 && DiceRoll <= 4)
+                newPowerup = Instantiate(minePowerup, posToSpawn, Quaternion.identity);
+            else
+            {
+                GameObject randomPowerUp = powerups[Random.Range(0, powerups.Length)];
+                newPowerup = Instantiate(randomPowerUp, posToSpawn, Quaternion.identity);
+            }
             newPowerup.transform.parent = _powerupContainer.transform;
             yield return new WaitForSeconds(Random.Range(3, 8));
         }

@@ -70,6 +70,7 @@ public class Enemy : MonoBehaviour
 
             _animator.SetTrigger("OnEnemyDeath");
             _enemySpeed = 0f;
+            this.GetComponent<Collider2D>().enabled = false;
             _audioSource.Play();
             collision.GetComponent<Player>().Damage();
             Destroy(this.gameObject, 2.8f);
@@ -85,9 +86,18 @@ public class Enemy : MonoBehaviour
                 _player.AddToScore(10);
 
             _enemySpeed = 0;
+            this.GetComponent<Collider2D>().enabled = false;
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 2.8f);
         }
+    }
+
+    public void MineExplosion()
+    {
+        _animator.SetTrigger("OnEnemyDeath");
+        _enemySpeed = 0;
+        _audioSource.Play();
+        Destroy(this.gameObject, 2.8f);
     }
 
 }

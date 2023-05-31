@@ -35,6 +35,7 @@ public class Powerup : MonoBehaviour
                 case 2: player.ShieldsActive(); break;
                 case 3: player.AddAmmo(); break;
                 case 4: player.LifeUp(); break;
+                case 5: player.MinesActive(); break;
                 default: break;
             }
 

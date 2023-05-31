@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject _tripleShotPrefab;
     [SerializeField] GameObject _shieldVisualizer;
     [SerializeField] int _shieldDurability = 3;
+    [SerializeField] GameObject _MinePrefab;
 
     [Header("Engine Data")]
     [SerializeField] GameObject _rightEngine;
@@ -41,6 +42,7 @@ public class Player : MonoBehaviour
     bool _isTripleShotActive = false;
     bool _isSpeedBoostActive = false;
     bool _isShieldActive = false;
+    bool _isMineActive = false;
     SpawnManager _spawnManager;
     float _canFire = -1f;
     UIManager _uiManager;
@@ -77,6 +79,11 @@ public class Player : MonoBehaviour
     void FireLaser()
     {
         _canFire = Time.time + _fireRate;
+
+        if(_isMineActive)
+        {
+            Instantiate(_MinePrefab, transform.position, Quaternion.identity);
+        }else
         if (_isTripleShotActive)
         {
             Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
@@ -150,18 +157,8 @@ public class Player : MonoBehaviour
 
         _lives--;
 
-        if(_lives == 2)
-            _rightEngine.SetActive(true);
-        else if (_lives == 1)
-            _leftEngine.SetActive(true);
-
+        CheckEngines();
         _uiManager.UpdateLives(_lives);
-
-        if (_lives < 1)
-        {
-            _spawnManager.OnPlayerDeath();
-            Destroy(this.gameObject);
-        }
     }
 
     public void TripleShotActive()
@@ -182,6 +179,12 @@ public class Player : MonoBehaviour
         _shieldVisualizer?.SetActive(true);
     }
 
+    public void MinesActive()
+    {
+        _isMineActive = true;
+        StartCoroutine(MinesPowerDownRoutine());
+    }
+
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5);
@@ -194,6 +197,11 @@ public class Player : MonoBehaviour
         _isSpeedBoostActive = false;
     }
 
+    IEnumerator MinesPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5);
+        _isMineActive = false;
+    }
     public void AddToScore(int amount)
     {
         _score += amount;
@@ -211,5 +219,17 @@ public class Player : MonoBehaviour
 
         _lives++;
         _uiManager.UpdateLives(_lives);
+        CheckEngines();
+    }
+
+    void CheckEngines()
+    {
+        switch (_lives)
+        {
+            case 0: _spawnManager.OnPlayerDeath(); Destroy(this.gameObject); break;
+            case 1: _leftEngine.SetActive(true); break;
+            case 2: _rightEngine.SetActive(true); _leftEngine.SetActive(false); break;
+            case 3: _rightEngine.SetActive(false); _leftEngine.SetActive(false); break;
+        }
     }
 }
