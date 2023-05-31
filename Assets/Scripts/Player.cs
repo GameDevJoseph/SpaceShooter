@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
+using UnityEngine.Rendering.PostProcessing;
+
 
 public class Player : MonoBehaviour
 {
@@ -39,6 +40,13 @@ public class Player : MonoBehaviour
     [SerializeField] AudioClip _laserAudio;
     [SerializeField] AudioClip _noLaserAmmo;
 
+    [Header("Camera")]
+    [SerializeField] Camera _mainCamera;
+    [SerializeField] float _camShakeDuration = 3f;
+    [SerializeField] float _camShakeMultiplier = 1f;
+    
+
+
     bool _isTripleShotActive = false;
     bool _isSpeedBoostActive = false;
     bool _isShieldActive = false;
@@ -46,12 +54,17 @@ public class Player : MonoBehaviour
     SpawnManager _spawnManager;
     float _canFire = -1f;
     UIManager _uiManager;
+    
 
     void Start()
     {
+        _mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+
+        if (_mainCamera == null)
+            Debug.LogError("Main Camera is null");
 
         if (_audioSource == null)
             Debug.LogError("Audio Source is null");
@@ -108,14 +121,18 @@ public class Player : MonoBehaviour
         float verticalInput = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontalInput, verticalInput, 0);
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && _uiManager.CanThrust)
+        {
             transform.Translate(direction * (_moveSpeed * _thrustSpeedMultipler) * Time.deltaTime);
+            _uiManager.ThrustExhaustion();
+        }
         else if (!_isSpeedBoostActive)
             transform.Translate(direction * _moveSpeed * Time.deltaTime);
         else
             transform.Translate(direction * (_moveSpeed * _speedMultiplier) * Time.deltaTime);
 
 
+        
         if (transform.position.x > _rightBoundary)
             SetNewPosition(new Vector3(_leftBoundary, transform.position.y, transform.position.z));
 
@@ -156,7 +173,7 @@ public class Player : MonoBehaviour
         }
 
         _lives--;
-
+        StartCoroutine(CameraShake());
         CheckEngines();
         _uiManager.UpdateLives(_lives);
     }
@@ -230,6 +247,26 @@ public class Player : MonoBehaviour
             case 1: _leftEngine.SetActive(true); break;
             case 2: _rightEngine.SetActive(true); _leftEngine.SetActive(false); break;
             case 3: _rightEngine.SetActive(false); _leftEngine.SetActive(false); break;
+        }
+    }
+
+    
+
+    IEnumerator CameraShake()
+    {
+        Vector3 camOriginalPos = _mainCamera.transform.localPosition;
+        float elapsedTime = 0f;
+        while(elapsedTime < _camShakeDuration)
+        {
+            float randomX = Random.Range(-0.25f, .25f) * _camShakeMultiplier;
+            float randomY = Random.Range(-0.25f, .25f) * _camShakeMultiplier;
+            _mainCamera.transform.position = new Vector3
+                (camOriginalPos.x + randomX, 
+                camOriginalPos.y + randomY, 
+                camOriginalPos.z);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+            _mainCamera.transform.position = camOriginalPos;
         }
     }
 }
