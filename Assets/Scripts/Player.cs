@@ -107,6 +107,7 @@ public class Player : MonoBehaviour
             _laserAmmoCount--;
             if (_laserAmmoCount <= 0)
                 _laserAmmoCount = 0;
+            _uiManager.UpdateAmmoText(_laserAmmoCount, 15);
         }else if(_laserAmmoCount <= 0)
         {
             _audioSource.PlayOneShot(_noLaserAmmo);
@@ -228,6 +229,7 @@ public class Player : MonoBehaviour
     public void AddAmmo()
     {
         _laserAmmoCount = 15;
+        _uiManager.UpdateAmmoText(_laserAmmoCount, 15);
     }
     public void LifeUp()
     {

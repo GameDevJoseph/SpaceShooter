@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] TMP_Text _restartText;
     [SerializeField] GameManager _gameManager;
     [SerializeField] Slider _thrustSlider;
-
+    [SerializeField] TMP_Text _ammoText;
     [SerializeField] bool _canThrust = false;
     [SerializeField] float _refillThrusterSpeed = 0.1f;
 
@@ -44,6 +44,11 @@ public class UIManager : MonoBehaviour
     public void UpdateScore(int playerScore)
     {
         _scoreText.text = "Score: " + playerScore.ToString();
+    }
+
+    public void UpdateAmmoText(int currentAmmo, int maxAmmo)
+    {
+        _ammoText.text = "Ammo:" + currentAmmo.ToString() + "/" + maxAmmo.ToString();
     }
 
     public void UpdateLives(int currentLives)
