@@ -9,9 +9,18 @@ public class Laser : MonoBehaviour
     [SerializeField] float _laserSpeed = 8f;
 
     [SerializeField] bool _isEnemyLaser = false;
+    
+
+    Player _player;
+
+    private void Start()
+    {
+        _player = GameObject.Find("Player").GetComponent<Player>();
+    }
 
     void Update()
     {
+
         if (!_isEnemyLaser)
             MoveUp();
         else
@@ -21,7 +30,7 @@ public class Laser : MonoBehaviour
     void MoveDown()
     {
         transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
-
+        
         if (transform.position.y < -8)
         {
             if (transform.parent != null)
