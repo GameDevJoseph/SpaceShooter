@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LifeUp : MonoBehaviour
+public class ScaleObject : MonoBehaviour
 {
     [SerializeField] float _scaleSpeed = 3f;
     [SerializeField] Vector3 _lowScaleRange;

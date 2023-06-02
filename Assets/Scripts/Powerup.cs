@@ -6,9 +6,7 @@ public class Powerup : MonoBehaviour
 {
     [SerializeField] float _speed = 3.0f;
     [SerializeField] int _powerupID;
-
     [SerializeField] AudioClip _powerupAudio;
-
     
     void Update()
     {
@@ -36,10 +34,9 @@ public class Powerup : MonoBehaviour
                 case 3: player.AddAmmo(); break;
                 case 4: player.LifeUp(); break;
                 case 5: player.MinesActive(); break;
+                case 6: player.EMP(); break;
                 default: break;
             }
-
-            
             Destroy(this.gameObject);
         }
     }

@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7141807894994375440}
   - component: {fileID: 7141807894994375443}
-  - component: {fileID: 7141807894994375442}
   - component: {fileID: 7141807894994375447}
   - component: {fileID: 7141807894994375446}
   - component: {fileID: 7141807894994375441}
+  - component: {fileID: 6709067143824287416}
   m_Layer: 0
   m_Name: Life Powerup
   m_TagString: Untagged
@@ -88,21 +88,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7141807894994375442
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7141807894994375453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6ed335b95a198664fa01bab24f26ff32, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _scaleSpeed: 3
-  _lowScaleRange: {x: 0.5, y: 0.5, z: 1}
-  _maxScaleRange: {x: 1, y: 1, z: 1}
 --- !u!61 &7141807894994375447
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -165,3 +150,19 @@ MonoBehaviour:
   _speed: 3
   _powerupID: 4
   _powerupAudio: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _isDestroyedOnImpact: 1
+--- !u!114 &6709067143824287416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7141807894994375453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb5a5842cb9f9e94ebe9d83e0dc8ad53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scaleSpeed: 3
+  _lowScaleRange: {x: 0.5, y: 0.5, z: 0.5}
+  _maxScaleRange: {x: 1, y: 1, z: 1}

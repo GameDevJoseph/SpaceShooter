@@ -11,22 +11,27 @@ public class SpawnManager : MonoBehaviour
 
     [SerializeField] int _currentWave;
     [SerializeField] int _waveAmount = 5;
+    [SerializeField] int _currentSpawnedAmount;
 
     [Header("Powerup Spawn Data")]
     [SerializeField] GameObject[] powerups;
     [SerializeField] GameObject minePowerup;
     [SerializeField] GameObject _powerupContainer;
 
+
+    [SerializeField] int _waveEnemyCount;
     bool _stopSpawning = false;
     // Start is called before the first frame update
     void Start()
     {
+        _waveEnemyCount = _enemyWaveAmount[0];
     }
 
     public void StartSpawning()
     {
         StartCoroutine(SpawnRoutine());
         StartCoroutine(SpawnPowerupRoutine());
+        
     }
 
     IEnumerator SpawnRoutine()
@@ -34,21 +39,27 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         while (!_stopSpawning && _currentWave <= _enemyWaveAmount.Count)
         {
+            
             if (_enemyWaveAmount[_currentWave] > 0)
             {
-                Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
-                GameObject newEnemy = Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Length)], posToSpawn, Quaternion.identity);
-                newEnemy.transform.parent = _enemyContainer.transform;
-                yield return new WaitForSeconds(5f);
+                if (_currentSpawnedAmount < _waveEnemyCount)
+                {
+                    Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
+                    GameObject newEnemy = Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Length)], posToSpawn, Quaternion.identity);
+                    _currentSpawnedAmount++;
+                    newEnemy.transform.parent = _enemyContainer.transform;
+                    yield return new WaitForSeconds(5f);
+                }else
+                    yield return null;
             }else
             {
                 yield return new WaitForSeconds(3f);
+                _currentSpawnedAmount = 0;
                 _enemyWaveAmount.Add(_waveAmount += 5);
                 yield return new WaitForSeconds(1f);
                 _currentWave++;
-                
+                _waveEnemyCount = _enemyWaveAmount[_currentWave];
             }
-            
         }
     }
 

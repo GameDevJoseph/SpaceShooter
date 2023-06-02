@@ -35,6 +35,8 @@ public class Player : MonoBehaviour
     [Header("Engine Data")]
     [SerializeField] GameObject _rightEngine;
     [SerializeField] GameObject _leftEngine;
+    [SerializeField] GameObject _backBooster;
+    [SerializeField] GameObject _empStatic;
 
     [Header("Audio")]
     [SerializeField] AudioSource _audioSource;
@@ -55,7 +57,7 @@ public class Player : MonoBehaviour
     SpawnManager _spawnManager;
     float _canFire = -1f;
     UIManager _uiManager;
-    
+    bool _isPlayerEMPed;
 
     void Start()
     {
@@ -92,6 +94,9 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
+        if (_isPlayerEMPed)
+            return;
+
         _canFire = Time.time + _fireRate;
 
         if(_isMineActive)
@@ -207,6 +212,35 @@ public class Player : MonoBehaviour
     {
         _isMineActive = true;
         StartCoroutine(MinesPowerDownRoutine());
+    }
+
+    public void EMP()
+    {
+        StartCoroutine(EMPWareOffRoutine());
+    }
+
+    IEnumerator EMPWareOffRoutine()
+    {
+        var playerBaseSpeed = _moveSpeed;
+        _moveSpeed = 0;
+        _isPlayerEMPed = true;
+
+        if (_backBooster != null)
+            _backBooster.SetActive(false);
+
+        if (_empStatic != null)
+            _empStatic.SetActive(true);
+
+        yield return new WaitForSeconds(5f);
+
+        if (_backBooster != null)
+            _backBooster.SetActive(true);
+
+        if (_empStatic != null)
+            _empStatic.SetActive(false);
+
+        _moveSpeed = playerBaseSpeed;
+        _isPlayerEMPed = false;
     }
 
     IEnumerator TripleShotPowerDownRoutine()
