@@ -14,14 +14,21 @@ public class Enemy : MonoBehaviour
     float _canFire = -1f;
     bool _canFireLasers = false;
 
+    SpawnManager _spawnManager;
+
     [SerializeField] int _enemyID;
 
     private void Start()
     {
+        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _audioSource = GetComponent<AudioSource>();
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("Player").GetComponent<Player>();
         _canFireLasers = true;
+
+        if (_spawnManager == null)
+            Debug.LogError("Spawn Manager is null");
+
         if (_animator == null)
             Debug.LogError("Enemy Animator is Null");
 
@@ -75,6 +82,7 @@ public class Enemy : MonoBehaviour
             if (player == null)
                 return;
 
+            _spawnManager.OnEnemyDeath();
             _animator.SetTrigger("OnEnemyDeath");
             _enemySpeed = 0f;
             _canFireLasers = false;
@@ -93,6 +101,7 @@ public class Enemy : MonoBehaviour
             if(_player != null)
                 _player.AddToScore(10);
 
+            _spawnManager.OnEnemyDeath();
             _enemySpeed = 0;
             _canFireLasers = false;
             this.GetComponent<Collider2D>().enabled = false;

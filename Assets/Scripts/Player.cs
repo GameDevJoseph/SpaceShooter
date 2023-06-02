@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] float _thrustSpeedMultipler = 1.5f;
     [SerializeField] float _speedMultiplier = 2;
     [SerializeField] int _score;
+    [SerializeField] int _maxAmmo = 15;
 
     [Header("Player Boundaries")]
     [SerializeField] float _leftBoundary = -11.5f;
@@ -105,9 +106,11 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, transform.position + _laserSpawnOffset, Quaternion.identity);
             _laserAmmoCount--;
+
             if (_laserAmmoCount <= 0)
                 _laserAmmoCount = 0;
-            _uiManager.UpdateAmmoText(_laserAmmoCount, 15);
+
+            _uiManager.UpdateAmmoText(_laserAmmoCount, _maxAmmo);
         }else if(_laserAmmoCount <= 0)
         {
             _audioSource.PlayOneShot(_noLaserAmmo);
@@ -158,6 +161,9 @@ public class Player : MonoBehaviour
         {
             SpriteRenderer shieldRenderer = _shieldVisualizer.gameObject.GetComponent<SpriteRenderer>();
             _shieldDurability--;
+
+            if (_shieldDurability <= 0)
+                _shieldDurability = 0;
 
             if (shieldRenderer == null)
                 return;
@@ -228,8 +234,8 @@ public class Player : MonoBehaviour
     
     public void AddAmmo()
     {
-        _laserAmmoCount = 15;
-        _uiManager.UpdateAmmoText(_laserAmmoCount, 15);
+        _laserAmmoCount = _maxAmmo;
+        _uiManager.UpdateAmmoText(_laserAmmoCount, _maxAmmo);
     }
     public void LifeUp()
     {

@@ -1745,6 +1745,7 @@ MonoBehaviour:
   _thrustSpeedMultipler: 1.5
   _speedMultiplier: 2
   _score: 0
+  _maxAmmo: 15
   _leftBoundary: -11.3
   _rightBoundary: 11.17
   _bottomBoundary: -3
@@ -2495,67 +2496,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1821456169}
   m_CullTransparentMesh: 1
---- !u!1001 &1884925818
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6319147665907197541, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: _speed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_RootOrder
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 6.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.029
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197542, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6319147665907197547, guid: eb881cfe25929614b9565699846548a9, type: 3}
-      propertyPath: m_Name
-      value: Ammo Powerup
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: eb881cfe25929614b9565699846548a9, type: 3}
 --- !u!1 &1891830050
 GameObject:
   m_ObjectHideFlags: 0
@@ -2665,6 +2605,9 @@ MonoBehaviour:
   - {fileID: 5129724063372996939, guid: 172f704bc4ead3f4b8b92374caba0a08, type: 3}
   - {fileID: 3616714854319900004, guid: ace98b0a7c6af664f867d11585a04b8b, type: 3}
   _enemyContainer: {fileID: 2028140804}
+  _enemyWaveAmount: 01000000
+  _currentWave: 0
+  _waveAmount: 5
   powerups:
   - {fileID: 9129231233770202940, guid: a1d9752ca3fb6fb46920703d8c9329bc, type: 3}
   - {fileID: 3824025122773302110, guid: 9e65aa5e5555c694393aa64a1a0e151b, type: 3}

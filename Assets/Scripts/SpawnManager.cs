@@ -7,6 +7,10 @@ public class SpawnManager : MonoBehaviour
     [Header("Enemy Spawn Data")]
     [SerializeField] GameObject[] _enemyPrefab;
     [SerializeField] GameObject _enemyContainer;
+    [SerializeField] List<int> _enemyWaveAmount = new List<int>();
+
+    [SerializeField] int _currentWave;
+    [SerializeField] int _waveAmount = 5;
 
     [Header("Powerup Spawn Data")]
     [SerializeField] GameObject[] powerups;
@@ -28,12 +32,23 @@ public class SpawnManager : MonoBehaviour
     IEnumerator SpawnRoutine()
     {
         yield return new WaitForSeconds(3f);
-        while(!_stopSpawning)
+        while (!_stopSpawning && _currentWave <= _enemyWaveAmount.Count)
         {
+            if (_enemyWaveAmount[_currentWave] > 0)
+            {
                 Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
-                GameObject newEnemy = Instantiate(_enemyPrefab[Random.Range(0,_enemyPrefab.Length)], posToSpawn, Quaternion.identity);
+                GameObject newEnemy = Instantiate(_enemyPrefab[Random.Range(0, _enemyPrefab.Length)], posToSpawn, Quaternion.identity);
                 newEnemy.transform.parent = _enemyContainer.transform;
                 yield return new WaitForSeconds(5f);
+            }else
+            {
+                yield return new WaitForSeconds(3f);
+                _enemyWaveAmount.Add(_waveAmount += 5);
+                yield return new WaitForSeconds(1f);
+                _currentWave++;
+                
+            }
+            
         }
     }
 
@@ -45,7 +60,7 @@ public class SpawnManager : MonoBehaviour
             GameObject newPowerup;
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0);
             int DiceRoll = Random.Range(0, 9);
-            if(DiceRoll >= 3 && DiceRoll <= 4)
+            if (DiceRoll >= 3 && DiceRoll <= 4)
                 newPowerup = Instantiate(minePowerup, posToSpawn, Quaternion.identity);
             else
             {
@@ -58,4 +73,6 @@ public class SpawnManager : MonoBehaviour
     }
 
     public void OnPlayerDeath() => _stopSpawning = true;
+
+    public void OnEnemyDeath() => _enemyWaveAmount[_currentWave]--;
 }
