@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
     [SerializeField] GameObject _tripleShotPrefab;
     [SerializeField] GameObject _shieldVisualizer;
     [SerializeField] int _shieldDurability = 3;
+    [SerializeField] SpriteRenderer _shieldRenderer;
     [SerializeField] GameObject _MinePrefab;
 
     [Header("Engine Data")]
@@ -47,8 +48,8 @@ public class Player : MonoBehaviour
     [SerializeField] Camera _mainCamera;
     [SerializeField] float _camShakeDuration = 3f;
     [SerializeField] float _camShakeMultiplier = 1f;
-    
 
+    
 
     bool _isTripleShotActive = false;
     bool _isSpeedBoostActive = false;
@@ -65,6 +66,7 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
+        
 
         if (_mainCamera == null)
             Debug.LogError("Main Camera is null");
@@ -164,23 +166,16 @@ public class Player : MonoBehaviour
     {
         if(_isShieldActive)
         {
-            SpriteRenderer shieldRenderer = _shieldVisualizer.gameObject.GetComponent<SpriteRenderer>();
+            _shieldRenderer = _shieldVisualizer.gameObject.GetComponent<SpriteRenderer>();
             _shieldDurability--;
 
             if (_shieldDurability <= 0)
                 _shieldDurability = 0;
 
-            if (shieldRenderer == null)
+            if (_shieldRenderer == null)
                 return;
 
-            switch (_shieldDurability)
-            {
-                case 0: _isShieldActive = false; _shieldVisualizer.SetActive(false); break;
-                case 1: shieldRenderer.color = Color.red; break;
-                case 2: shieldRenderer.color = Color.yellow; break;
-                case 3: _shieldDurability--; break;
-                default: break;
-            }
+            UpdateShieldVisual();
             return;
         }
 
@@ -205,13 +200,28 @@ public class Player : MonoBehaviour
     public void ShieldsActive()
     {
         _isShieldActive = true;
-        _shieldVisualizer?.SetActive(true);
+        _shieldDurability = 3;
+        _shieldVisualizer.SetActive(true);
+
+        UpdateShieldVisual();
+        
     }
 
     public void MinesActive()
     {
         _isMineActive = true;
         StartCoroutine(MinesPowerDownRoutine());
+    }
+    public void UpdateShieldVisual()
+    {
+        switch (_shieldDurability)
+        {
+            case 0: _isShieldActive = false; _shieldVisualizer.SetActive(false); break;
+            case 1: _shieldRenderer.color = Color.red; break;
+            case 2: _shieldRenderer.color = Color.yellow; break;
+            case 3: _shieldRenderer.color = Color.green;  break;
+            default: break;
+        }
     }
 
     public void EMP()
@@ -257,7 +267,7 @@ public class Player : MonoBehaviour
 
     IEnumerator MinesPowerDownRoutine()
     {
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(5f);
         _isMineActive = false;
     }
     public void AddToScore(int amount)

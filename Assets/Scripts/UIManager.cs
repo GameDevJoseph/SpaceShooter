@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] bool _canThrust = false;
     [SerializeField] float _refillThrusterSpeed = 0.1f;
 
+
+    
     public bool CanThrust { get { return _canThrust; } }
     private void Start()
     {
@@ -40,6 +42,7 @@ public class UIManager : MonoBehaviour
 
         if(!_canThrust)
             StartCoroutine(ThrustRefill());
+
     }
     public void UpdateScore(int playerScore)
     {

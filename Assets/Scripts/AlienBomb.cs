@@ -2,31 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ExplosionMine : MonoBehaviour
+public class AlienBomb : MonoBehaviour
 {
-    [SerializeField] float _mineSpeed = 3f;
+    [SerializeField] float _bombSpeed = 2f;
     [SerializeField] GameObject _explosionPrefab;
-    [SerializeField] SpriteRenderer _spriteRenderer;
 
-    
+    SpriteRenderer _spriteRenderer;
     // Start is called before the first frame update
-    private void Start()
+    void Start()
     {
-        
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        if (_spriteRenderer == null)
-            Debug.LogError("Sprite Renderer is null");
 
-        StartCoroutine(FlashMine());
-        StartCoroutine(StopMine());
-        StartCoroutine(ExplodeMine());
+        if (_spriteRenderer == null)
+            Debug.LogError("SpriteRenderer is null");
+
+        StartCoroutine(StopBomb());
+        StartCoroutine(BombFlash());
+        StartCoroutine(ExplodeBomb());
     }
+
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.up * _mineSpeed * Time.deltaTime);
+        transform.Translate(Vector3.down * _bombSpeed * Time.deltaTime);
     }
-    IEnumerator FlashMine()
+
+    IEnumerator StopBomb()
+    {
+        yield return new WaitForSeconds(Random.Range(2f, 4f));
+        _bombSpeed = 0;
+    }
+
+    IEnumerator BombFlash()
     {
         yield return new WaitForSeconds(3f);
         while (true)
@@ -37,16 +44,12 @@ public class ExplosionMine : MonoBehaviour
             yield return new WaitForSeconds(0.15f);
         }
     }
-
-    IEnumerator StopMine()
-    {
-        yield return new WaitForSeconds(2f);
-        _mineSpeed = 0;
-    }
-    IEnumerator ExplodeMine()
+    IEnumerator ExplodeBomb()
     {
         yield return new WaitForSeconds(7f);
         Instantiate(_explosionPrefab.transform, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
+
+    
 }

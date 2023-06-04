@@ -148,4 +148,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _laserSpeed: 8
   _isEnemyLaser: 0
-  _isEnemyLineLaser: 0
+  _isLeftEnemy: 0
+  _isRightEnemy: 0
+  _leftOffset: {x: 0, y: 2, z: 0}
+  _rightOffset: {x: 0, y: -2, z: 0}
