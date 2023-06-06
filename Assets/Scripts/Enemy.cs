@@ -21,6 +21,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject _chargedLaser;
     [SerializeField] AudioClip _chargedLaserPowerOn;
     [SerializeField] AudioClip _chargedLaserPowerOff;
+    [SerializeField] GameObject _telegraphLaserBeam;
 
     [Header("Shield Ship Data")]
     [SerializeField] GameObject _enemyShield;
@@ -29,6 +30,8 @@ public class Enemy : MonoBehaviour
 
     [Header("ZigZag Ship Data")]
     [SerializeField] float _zigzagSpeed;
+    [SerializeField] GameObject _boosters;
+    [SerializeField] GameObject _telegraphBoostArea;
 
     Animator _animator;
     Player _player;
@@ -37,6 +40,9 @@ public class Enemy : MonoBehaviour
     bool _canFireLasers = false;
     SpawnManager _spawnManager;
     bool _isChargedLaserFiring = false;
+    
+    bool _hasObtainedPlayerPos;
+    private bool _hasLockedOntoPlayer;
 
     public int EnemyID { get { return _enemyID; } }
 
@@ -72,7 +78,7 @@ public class Enemy : MonoBehaviour
             case 2: LeftSideSwipperShipBehavior(); FireBombs(); break;
             case 3: RightSideSwipperShipBehavior(); FireBombs(); break;
             case 4: ChargeLaserShipBehavior(); FireChargedLaser(); break;
-            case 5: ZigZagShipBehavior(); break;
+            case 5: ZigZagShipBehavior(); ChargeAtPlayer(); break;
         }
     }
     void FireLasers()
@@ -115,6 +121,42 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void ChargeAtPlayer()
+    {
+        float distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
+        if (distanceToPlayer < 5 && !_hasLockedOntoPlayer)
+        {
+
+            _enemySpeed = 0;
+            _zigzagSpeed = 0;
+            _hasLockedOntoPlayer = true;
+            StartCoroutine(BashPlayer());
+        }else if(_hasLockedOntoPlayer && !_hasObtainedPlayerPos)
+        {
+            if (_player != null)
+            {
+                transform.Translate(Vector2.down * _enemySpeed * Time.deltaTime);
+                Vector2 distance = _player.transform.position - transform.position;
+                distance.Normalize();
+                float rotateAngle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg + 90;
+                Quaternion angle = Quaternion.AngleAxis(rotateAngle, Vector3.forward);
+                transform.rotation = Quaternion.Slerp(transform.rotation, angle, 3f * Time.deltaTime);
+            }
+        }
+        
+    }
+
+    IEnumerator BashPlayer()
+    {
+        yield return new WaitForSeconds(3f);
+        _telegraphBoostArea.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        _hasObtainedPlayerPos = true;
+        _boosters.SetActive(true);
+        yield return new WaitForSeconds(0.5f);
+        _enemySpeed = 30f;
+
+    }
     IEnumerator EnemyShieldRecharge()
     {
         yield return new WaitForSeconds(8f);
@@ -136,11 +178,16 @@ public class Enemy : MonoBehaviour
     {
         while(true)
         {
-            if(_chargedLaser != null)
+            
+            _telegraphLaserBeam.SetActive(true);
+            yield return new WaitForSeconds(2f);
+
+            if (_chargedLaser != null)
                 _chargedLaser.gameObject.SetActive(true);
 
             _audioSource.PlayOneShot(_chargedLaserPowerOn);
             _animator.SetBool("ShootChargedLaser", true);
+            _telegraphLaserBeam.SetActive(false);
             yield return new WaitForSeconds(10f);
             _animator.SetBool("ShootChargedLaser", false);
 
@@ -252,10 +299,18 @@ public class Enemy : MonoBehaviour
         Vector3 maxLeftMovement = new Vector3(-.05f * _zigzagSpeed, 0, 0);
         Vector3 maxRightMovement = new Vector3(.05f * _zigzagSpeed, 0, 0);
         transform.position = Vector3.Slerp(transform.position + maxLeftMovement, transform.position + maxRightMovement, zigPercentage);   
-        if (transform.position.y < -5.5f)
+        if (transform.position.y < -5.5f || transform.position.y > 14 || transform.position.x > 12 || transform.position.x < -12) 
         {
+            _enemySpeed = 2f;
+            _zigzagSpeed = 0.5f;
+            _boosters.SetActive(false);
+            _hasObtainedPlayerPos = false;
+            _telegraphBoostArea.SetActive(false);
+            _hasLockedOntoPlayer = false;
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            StopAllCoroutines();
             float randomX = Random.Range(-8f, 8f);
-            transform.position = new Vector3(randomX, 8f, 0f);
+            transform.position = new Vector3(randomX, 12f, 0f);
         }
     }
 
@@ -272,11 +327,21 @@ public class Enemy : MonoBehaviour
         if (_animator != null)
             _animator.SetTrigger("OnEnemyDeath");
 
+        if (_boosters != null)
+            _boosters.SetActive(false);
+
+        if (_telegraphBoostArea != null)
+            _telegraphBoostArea.SetActive(false);
+
+        if(_telegraphLaserBeam != null)
+            _telegraphLaserBeam.SetActive(false);
+
         _spawnManager.OnEnemyDeath();
 
         if (_player != null)
             _player.AddToScore(10);
 
+        StopAllCoroutines();
         _audioSource.Play();
         _enemySpeed = 0f;
         _zigzagSpeed = 0f;

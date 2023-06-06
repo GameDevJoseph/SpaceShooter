@@ -115,7 +115,7 @@ Transform:
   m_GameObject: {fileID: 3616714854319900004}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 7.36, y: 5.28, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1476124375}
@@ -147,6 +147,8 @@ MonoBehaviour:
   _isEnemyShielded: 1
   _shieldPowerDownAudio: {fileID: 8300000, guid: 4dbd1ca2d59d9cd49a27b75ed0ec49ee, type: 3}
   _zigzagSpeed: 0
+  _boosters: {fileID: 0}
+  _telegraphBoostArea: {fileID: 0}
 --- !u!212 &2476922605322131585
 SpriteRenderer:
   m_ObjectHideFlags: 0

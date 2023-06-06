@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 8889988928938216173}
   - component: {fileID: 8889988928938216174}
   - component: {fileID: 8889988928938216161}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Mines Powerup
-  m_TagString: Untagged
+  m_TagString: Powerups
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,4 +149,3 @@ MonoBehaviour:
   _speed: 3
   _powerupID: 5
   _powerupAudio: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
-  _isDestroyedOnImpact: 1

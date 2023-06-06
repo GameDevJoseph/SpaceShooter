@@ -31,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 5088947644074943945}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 8.42, y: -0.76, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -58,7 +58,12 @@ MonoBehaviour:
   _chargedLaser: {fileID: 0}
   _chargedLaserPowerOn: {fileID: 0}
   _chargedLaserPowerOff: {fileID: 0}
+  _enemyShield: {fileID: 0}
+  _isEnemyShielded: 0
+  _shieldPowerDownAudio: {fileID: 0}
   _zigzagSpeed: 0
+  _boosters: {fileID: 0}
+  _telegraphBoostArea: {fileID: 0}
 --- !u!212 &6264929193044506668
 SpriteRenderer:
   m_ObjectHideFlags: 0
