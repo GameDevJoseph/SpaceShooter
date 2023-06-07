@@ -58,15 +58,10 @@ public class Laser : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-
-   
-
     public void AssignEnemyLaser() => _isEnemyLaser = true;
-   
-
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && _isEnemyLaser)
+        if(collision.CompareTag("Player"))
         {
             Player player = collision.GetComponent<Player>();
 
@@ -75,10 +70,13 @@ public class Laser : MonoBehaviour
 
             player.Damage();
 
-            if(_isChargedLaser)
+            if (_isChargedLaser)
                 this.gameObject.SetActive(false);
             else
+            {
                 Destroy(this.gameObject);
+            }
+            
         }
     }
 }

@@ -144,6 +144,7 @@ MonoBehaviour:
   _chargedLaser: {fileID: 5318423403937398445}
   _chargedLaserPowerOn: {fileID: 8300000, guid: 9aaf0c18ac5746e4993dc2b06b77b610, type: 3}
   _chargedLaserPowerOff: {fileID: 8300000, guid: 027311c16f230614c93692d01165e400, type: 3}
+  _telegraphLaserBeam: {fileID: 52875853205398633}
   _enemyShield: {fileID: 0}
   _isEnemyShielded: 0
   _shieldPowerDownAudio: {fileID: 0}

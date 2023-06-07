@@ -33,6 +33,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] GameObject _boosters;
     [SerializeField] GameObject _telegraphBoostArea;
 
+    [Header("Shooting Backwards Ship Data")]
+    [SerializeField] GameObject _backwardLaserShot;
+    [SerializeField] float _maxXDistance;
+    [SerializeField] float _minXDistance;
+    [SerializeField] float _distanceBehindPlayer;
+    [SerializeField] Vector3 _laserOffset;
+
+
+    bool _hasFiredShotBackwards = false;
+    bool _isNearPlayer;
+
     Animator _animator;
     Player _player;
     float _fireRate = 3.0f;
@@ -40,13 +51,12 @@ public class Enemy : MonoBehaviour
     bool _canFireLasers = false;
     SpawnManager _spawnManager;
     bool _isChargedLaserFiring = false;
-    
-    bool _hasObtainedPlayerPos;
-    private bool _hasLockedOntoPlayer;
 
+    bool _hasObtainedPlayerPos;
+    bool _hasLockedOntoPlayer;
     public int EnemyID { get { return _enemyID; } }
 
-    private void Start()
+    void Start()
     {
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _audioSource = GetComponent<AudioSource>();
@@ -79,6 +89,7 @@ public class Enemy : MonoBehaviour
             case 3: RightSideSwipperShipBehavior(); FireBombs(); break;
             case 4: ChargeLaserShipBehavior(); FireChargedLaser(); break;
             case 5: ZigZagShipBehavior(); ChargeAtPlayer(); break;
+            case 6: BackwardShootingShipBehavior(); break;
         }
     }
     void FireLasers()
@@ -104,7 +115,6 @@ public class Enemy : MonoBehaviour
     {
         StartCoroutine(StartBombing());
     }
-
     void FireChargedLaser()
     {
         if (_enemySpeed == 0)
@@ -117,25 +127,27 @@ public class Enemy : MonoBehaviour
 
             _isChargedLaserFiring = true;
             StartCoroutine(ChargedLaserCoolDown());
-            
+
         }
     }
-
     void ChargeAtPlayer()
     {
+        if (_player == null)
+            return;
+
         float distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
-        if (distanceToPlayer < 5 && !_hasLockedOntoPlayer)
+        if (distanceToPlayer < 4 && !_hasLockedOntoPlayer)
         {
 
             _enemySpeed = 0;
             _zigzagSpeed = 0;
             _hasLockedOntoPlayer = true;
             StartCoroutine(BashPlayer());
-        }else if(_hasLockedOntoPlayer && !_hasObtainedPlayerPos)
+        }
+        else if (_hasLockedOntoPlayer && !_hasObtainedPlayerPos)
         {
             if (_player != null)
             {
-                transform.Translate(Vector2.down * _enemySpeed * Time.deltaTime);
                 Vector2 distance = _player.transform.position - transform.position;
                 distance.Normalize();
                 float rotateAngle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg + 90;
@@ -143,9 +155,20 @@ public class Enemy : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, angle, 3f * Time.deltaTime);
             }
         }
-        
     }
-
+    IEnumerator ShootingBackwards()
+    {
+        _enemySpeed = 1;
+        yield return new WaitForSeconds(0.3f);
+        if (!_hasFiredShotBackwards)
+        {
+            _hasFiredShotBackwards = true;
+            _laserOffset = new Vector3(0, 1.75f, 0);
+            GameObject enemyLaser = Instantiate(_backwardLaserShot, transform.position + _laserOffset, Quaternion.identity);
+        }
+        yield return new WaitForSeconds(.2f);
+        _enemySpeed = 4f;
+    }
     IEnumerator BashPlayer()
     {
         yield return new WaitForSeconds(3f);
@@ -155,7 +178,6 @@ public class Enemy : MonoBehaviour
         _boosters.SetActive(true);
         yield return new WaitForSeconds(0.5f);
         _enemySpeed = 30f;
-
     }
     IEnumerator EnemyShieldRecharge()
     {
@@ -173,12 +195,10 @@ public class Enemy : MonoBehaviour
             Instantiate(_bombPrefab, transform.position, Quaternion.identity);
         }
     }
-
     IEnumerator ChargedLaserCoolDown()
     {
-        while(true)
+        while (true)
         {
-            
             _telegraphLaserBeam.SetActive(true);
             yield return new WaitForSeconds(2f);
 
@@ -198,7 +218,7 @@ public class Enemy : MonoBehaviour
             _isChargedLaserFiring = false;
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
@@ -206,7 +226,7 @@ public class Enemy : MonoBehaviour
             if (player == null)
                 return;
 
-            if(_isEnemyShielded)
+            if (_isEnemyShielded)
             {
                 EnemyShieldCollision();
                 collision.GetComponent<Player>().Damage();
@@ -222,11 +242,12 @@ public class Enemy : MonoBehaviour
             {
                 EnemyShieldCollision();
                 Destroy(collision.gameObject);
+                Destroy(collision.transform.parent.gameObject);
                 return;
             }
             Destroy(collision.gameObject);
 
-            if(_chargedLaser != null)
+            if (_chargedLaser != null)
                 Destroy(_chargedLaser);
 
             EnemyCollision();
@@ -269,7 +290,7 @@ public class Enemy : MonoBehaviour
     void LeftSideSwipperShipBehavior()
     {
         transform.Translate(Vector3.right * _enemySpeed * Time.deltaTime);
-        if(transform.position.x > 12)
+        if (transform.position.x > 12)
         {
             float randomY = Random.Range(2, 5);
             transform.position = new Vector3(-12, randomY, 0f);
@@ -284,22 +305,22 @@ public class Enemy : MonoBehaviour
             transform.position = new Vector3(12, randomY, 0f);
         }
     }
-    private void ChargeLaserShipBehavior()
+    void ChargeLaserShipBehavior()
     {
         transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
-        if(transform.position.y <= 5)
+        if (transform.position.y <= 5)
         {
             _enemySpeed = 0;
         }
     }
-    private void ZigZagShipBehavior()
+    void ZigZagShipBehavior()
     {
-        transform.Translate(Vector3.down  * _enemySpeed * Time.deltaTime);
+        transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
         float zigPercentage = Mathf.PingPong(Time.time, 1);
         Vector3 maxLeftMovement = new Vector3(-.05f * _zigzagSpeed, 0, 0);
         Vector3 maxRightMovement = new Vector3(.05f * _zigzagSpeed, 0, 0);
-        transform.position = Vector3.Slerp(transform.position + maxLeftMovement, transform.position + maxRightMovement, zigPercentage);   
-        if (transform.position.y < -5.5f || transform.position.y > 14 || transform.position.x > 12 || transform.position.x < -12) 
+        transform.position = Vector3.Slerp(transform.position + maxLeftMovement, transform.position + maxRightMovement, zigPercentage);
+        if (transform.position.y < -5.5f || transform.position.y > 14 || transform.position.x > 12 || transform.position.x < -12)
         {
             _enemySpeed = 2f;
             _zigzagSpeed = 0.5f;
@@ -313,7 +334,36 @@ public class Enemy : MonoBehaviour
             transform.position = new Vector3(randomX, 12f, 0f);
         }
     }
+    void BackwardShootingShipBehavior()
+    {
+        transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
+        _laserOffset = new Vector3(0, 0, 0);
+        FireLasers();
 
+        if (_player == null)
+            return;
+
+        Vector2 distance = transform.position - _player.transform.position;
+        if (distance.x < _maxXDistance && distance.x > _minXDistance && distance.y <= _distanceBehindPlayer)
+            _isNearPlayer = true;
+
+        if (_isNearPlayer)
+        {
+            _canFireLasers = false;
+            if (!_hasFiredShotBackwards)
+                StartCoroutine(ShootingBackwards());
+        }
+
+        if (transform.position.y < -6f)
+        {
+            StopAllCoroutines();
+            _hasFiredShotBackwards = false;
+            _canFireLasers = true;
+            _isNearPlayer = false;
+            int randomX = Random.Range(-8, 8);
+            transform.position = new Vector3(randomX, 12, 0);
+        }
+    }
     void EnemyShieldCollision()
     {
         _isEnemyShielded = false;
@@ -321,7 +371,6 @@ public class Enemy : MonoBehaviour
         _audioSource.PlayOneShot(_shieldPowerDownAudio);
         StartCoroutine(EnemyShieldRecharge());
     }
-
     void EnemyCollision()
     {
         if (_animator != null)
@@ -333,7 +382,7 @@ public class Enemy : MonoBehaviour
         if (_telegraphBoostArea != null)
             _telegraphBoostArea.SetActive(false);
 
-        if(_telegraphLaserBeam != null)
+        if (_telegraphLaserBeam != null)
             _telegraphLaserBeam.SetActive(false);
 
         _spawnManager.OnEnemyDeath();

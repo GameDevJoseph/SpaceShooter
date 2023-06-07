@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 526276674693708850}
   - component: {fileID: 3704274741692707169}
-  - component: {fileID: 829273580087006723}
-  - component: {fileID: 1764103937084318200}
-  - component: {fileID: 4467847695938564547}
+  - component: {fileID: 1411619774574841040}
+  - component: {fileID: 5479858620708767735}
+  - component: {fileID: 2706842325073550677}
   m_Layer: 0
   m_Name: Laser
   m_TagString: Laser
@@ -87,33 +87,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &829273580087006723
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1479979475563592944}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: -0.01646036, y: 0.01646036}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 3}
-    newSize: {x: 1, y: 3}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.40742785, y: 2.7695556}
-  m_EdgeRadius: 0
---- !u!50 &1764103937084318200
+--- !u!50 &1411619774574841040
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 0
@@ -134,7 +108,33 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &4467847695938564547
+--- !u!61 &5479858620708767735
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1479979475563592944}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.015769005, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 3}
+    newSize: {x: 1, y: 3}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.52692413, y: 3}
+  m_EdgeRadius: 0
+--- !u!114 &2706842325073550677
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,4 +148,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _laserSpeed: 8
   _isEnemyLaser: 0
+  _isBackwardsShotLaser: 0
   _isChargedLaser: 0

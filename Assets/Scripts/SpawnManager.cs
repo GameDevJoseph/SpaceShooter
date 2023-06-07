@@ -42,7 +42,6 @@ public class SpawnManager : MonoBehaviour
     {
         StartCoroutine(SpawnRoutine());
         StartCoroutine(SpawnPowerupRoutine());
-        
     }
 
     IEnumerator SpawnRoutine()
@@ -75,6 +74,7 @@ public class SpawnManager : MonoBehaviour
                         case 3: posToSpawn = new Vector3(12, Random.Range(3f, 6f), 0); break;
                         case 4: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
                         case 5: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                        case 6: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
                     }
                     Enemy newEnemy = Instantiate(spawningEnemy, posToSpawn, Quaternion.identity);
                     _currentSpawnedAmount++;
@@ -104,7 +104,6 @@ public class SpawnManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         while (!_stopSpawning)
         {
-           
             int spawnPercentage = Random.Range(0, 101);
             GameObject spawningPowerup;
             if (spawnPercentage <= 60)
