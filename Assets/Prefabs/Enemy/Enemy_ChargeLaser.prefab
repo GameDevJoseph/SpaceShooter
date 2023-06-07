@@ -151,6 +151,11 @@ MonoBehaviour:
   _zigzagSpeed: 0
   _boosters: {fileID: 0}
   _telegraphBoostArea: {fileID: 0}
+  _backwardLaserShot: {fileID: 0}
+  _maxXDistance: 0
+  _minXDistance: 0
+  _distanceBehindPlayer: 0
+  _laserOffset: {x: 0, y: 0, z: 0}
 --- !u!212 &586443619491366003
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -469,6 +474,7 @@ MonoBehaviour:
   _laserSpeed: 0
   _isEnemyLaser: 1
   _isChargedLaser: 1
+  _isEnemyBackShot: 0
 --- !u!61 &2643370122117224735
 BoxCollider2D:
   m_ObjectHideFlags: 0

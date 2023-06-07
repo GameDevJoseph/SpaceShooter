@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] float _speedMultiplier = 2;
     [SerializeField] int _score;
     [SerializeField] int _maxAmmo = 15;
+    [SerializeField] PowerupDetector _powerupDetector;
 
     [Header("Player Boundaries")]
     [SerializeField] float _leftBoundary = -11.5f;
@@ -49,8 +50,8 @@ public class Player : MonoBehaviour
     [SerializeField] float _camShakeDuration = 3f;
     [SerializeField] float _camShakeMultiplier = 1f;
 
-    
 
+    
     bool _isTripleShotActive = false;
     bool _isSpeedBoostActive = false;
     bool _isShieldActive = false;
@@ -66,7 +67,10 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
         _audioSource = GetComponent<AudioSource>();
-        
+        _powerupDetector = GetComponentInChildren<PowerupDetector>();
+
+        if (_powerupDetector == null)
+            Debug.Log("Powerup Detector is null");
 
         if (_mainCamera == null)
             Debug.LogError("Main Camera is null");
@@ -84,16 +88,16 @@ public class Player : MonoBehaviour
 
         transform.position = Vector3.zero;
     }
-
-
     void Update()
     {
         CalculateMovement();
 
         if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
             FireLaser();
-    }
 
+        if (Input.GetKey(KeyCode.C))
+            _powerupDetector.PowerupMagnet(this);
+    }
     void FireLaser()
     {
         if (_isPlayerEMPed)
@@ -107,7 +111,7 @@ public class Player : MonoBehaviour
         }else
         if (_isTripleShotActive)
         {
-            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+            Instantiate(_tripleShotPrefab, transform.position + _laserSpawnOffset, Quaternion.identity);
         }
         else if(_laserAmmoCount > 0)
         {
@@ -125,7 +129,6 @@ public class Player : MonoBehaviour
         }
         _audioSource.Play();
     }
-
     void CalculateMovement()
     {
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -156,12 +159,10 @@ public class Player : MonoBehaviour
         if (transform.position.y > _topBoundary)
             SetNewPosition(new Vector3(transform.position.x, _topBoundary, transform.position.z));
     }
-
     void SetNewPosition(Vector3 pos)
     {
         transform.position = pos;
     }
-
     public void Damage()
     {
         if(_isShieldActive)
@@ -184,19 +185,16 @@ public class Player : MonoBehaviour
         CheckEngines();
         _uiManager.UpdateLives(_lives);
     }
-
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine());
     }
-
     public void SpeedBoostActive()
     {
         _isSpeedBoostActive = true;
         StartCoroutine(SpeeedBoostDownRoutine());
     }
-
     public void ShieldsActive()
     {
         _isShieldActive = true;
@@ -206,7 +204,6 @@ public class Player : MonoBehaviour
         UpdateShieldVisual();
         
     }
-
     public void MinesActive()
     {
         _isMineActive = true;
@@ -223,12 +220,10 @@ public class Player : MonoBehaviour
             default: break;
         }
     }
-
     public void EMP()
     {
         StartCoroutine(EMPWareOffRoutine());
     }
-
     IEnumerator EMPWareOffRoutine()
     {
         var playerBaseSpeed = _moveSpeed;
@@ -252,19 +247,16 @@ public class Player : MonoBehaviour
         _moveSpeed = playerBaseSpeed;
         _isPlayerEMPed = false;
     }
-
     IEnumerator TripleShotPowerDownRoutine()
     {
         yield return new WaitForSeconds(5);
         _isTripleShotActive = false;
     }
-
     IEnumerator SpeeedBoostDownRoutine()
     {
         yield return new WaitForSeconds(5);
         _isSpeedBoostActive = false;
     }
-
     IEnumerator MinesPowerDownRoutine()
     {
         yield return new WaitForSeconds(5f);
@@ -275,7 +267,6 @@ public class Player : MonoBehaviour
         _score += amount;
         _uiManager.UpdateScore(_score);
     }
-    
     public void AddAmmo()
     {
         _laserAmmoCount = _maxAmmo;
@@ -290,7 +281,6 @@ public class Player : MonoBehaviour
         _uiManager.UpdateLives(_lives);
         CheckEngines();
     }
-
     void CheckEngines()
     {
         switch (_lives)
@@ -301,9 +291,6 @@ public class Player : MonoBehaviour
             case 3: _rightEngine.SetActive(false); _leftEngine.SetActive(false); break;
         }
     }
-
-    
-
     IEnumerator CameraShake()
     {
         Vector3 camOriginalPos = _mainCamera.transform.localPosition;
@@ -321,4 +308,8 @@ public class Player : MonoBehaviour
             _mainCamera.transform.position = camOriginalPos;
         }
     }
+
+    
+
+    
 }

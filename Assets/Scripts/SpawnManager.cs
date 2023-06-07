@@ -27,7 +27,6 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] List<int> _enemyWaveAmount = new List<int>();
     [SerializeField] int _waveEnemyCount;
 
-    [SerializeField] TMP_Text _debugText;
 
     Vector3 posToSpawn;
 
@@ -96,7 +95,7 @@ public class SpawnManager : MonoBehaviour
 
     private void Update()
     {
-        _debugText.text = "Enemy Wave : " + _currentWave + "   Enemies Left: " + _enemyWaveAmount[_currentWave].ToString() + "Has Spawned : " + _currentSpawnedAmount + "/" + _waveEnemyCount.ToString();
+        
     }
 
     IEnumerator SpawnPowerupRoutine()

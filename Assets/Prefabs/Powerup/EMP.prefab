@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 4312946398331278616}
   - component: {fileID: 4312946398331278618}
   - component: {fileID: 4312946398331278617}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: EMP
-  m_TagString: Powerups
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8996232fcf9547d43a71ad3169e5b2b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 1.5
+  _speed: 1
   _powerupID: 6
   _powerupAudio: {fileID: 8300000, guid: fde092cc620c4d84bbd516870c421e91, type: 3}
 --- !u!58 &4312946398331278618

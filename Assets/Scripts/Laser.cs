@@ -9,6 +9,7 @@ public class Laser : MonoBehaviour
     [SerializeField] float _laserSpeed = 8f;
     [SerializeField] bool _isEnemyLaser = false;
     [SerializeField] bool _isChargedLaser = false;
+    [SerializeField] bool _isEnemyBackShot = false;
     
 
     Player _player;
@@ -59,9 +60,10 @@ public class Laser : MonoBehaviour
         }
     }
     public void AssignEnemyLaser() => _isEnemyLaser = true;
+    public void AssignEnemyBackShotLaser() => _isEnemyBackShot = true;
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player"))
+        if(collision.CompareTag("Player") && _isEnemyLaser || collision.CompareTag("Player") && _isEnemyBackShot)
         {
             Player player = collision.GetComponent<Player>();
 
@@ -77,6 +79,12 @@ public class Laser : MonoBehaviour
                 Destroy(this.gameObject);
             }
             
+        }
+
+        if(collision.CompareTag("Powerups"))
+        {
+            Destroy(collision.gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

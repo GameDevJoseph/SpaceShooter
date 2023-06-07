@@ -143,12 +143,18 @@ MonoBehaviour:
   _chargedLaser: {fileID: 0}
   _chargedLaserPowerOn: {fileID: 0}
   _chargedLaserPowerOff: {fileID: 0}
+  _telegraphLaserBeam: {fileID: 0}
   _enemyShield: {fileID: 1476124374}
   _isEnemyShielded: 1
   _shieldPowerDownAudio: {fileID: 8300000, guid: 4dbd1ca2d59d9cd49a27b75ed0ec49ee, type: 3}
   _zigzagSpeed: 0
   _boosters: {fileID: 0}
   _telegraphBoostArea: {fileID: 0}
+  _backwardLaserShot: {fileID: 0}
+  _maxXDistance: 0
+  _minXDistance: 0
+  _distanceBehindPlayer: 0
+  _laserOffset: {x: 0, y: 0, z: 0}
 --- !u!212 &2476922605322131585
 SpriteRenderer:
   m_ObjectHideFlags: 0

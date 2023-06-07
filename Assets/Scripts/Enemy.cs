@@ -40,7 +40,6 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _distanceBehindPlayer;
     [SerializeField] Vector3 _laserOffset;
 
-
     bool _hasFiredShotBackwards = false;
     bool _isNearPlayer;
 
@@ -83,13 +82,13 @@ public class Enemy : MonoBehaviour
     {
         switch (_enemyID)
         {
-            case 0: NormalShipBehavior(); FireLasers(); break;
+            case 0: NormalShipBehavior(); FireLasers(); EnemyShootingPowerup(); break;
             case 1: BlockadeShipBehavior(); break;
             case 2: LeftSideSwipperShipBehavior(); FireBombs(); break;
             case 3: RightSideSwipperShipBehavior(); FireBombs(); break;
             case 4: ChargeLaserShipBehavior(); FireChargedLaser(); break;
-            case 5: ZigZagShipBehavior(); ChargeAtPlayer(); break;
-            case 6: BackwardShootingShipBehavior(); break;
+            case 5: ZigZagShipBehavior(); ChargeAtPlayer(); EnemyShootingPowerup(); break;
+            case 6: BackwardShootingShipBehavior(); EnemyShootingPowerup(); break;
         }
     }
     void FireLasers()
@@ -107,7 +106,7 @@ public class Enemy : MonoBehaviour
 
             for (int i = 0; i < lasers.Length; i++)
             {
-                lasers[i].AssignEnemyLaser();
+                    lasers[i].AssignEnemyLaser();
             }
         }
     }
@@ -165,6 +164,12 @@ public class Enemy : MonoBehaviour
             _hasFiredShotBackwards = true;
             _laserOffset = new Vector3(0, 1.75f, 0);
             GameObject enemyLaser = Instantiate(_backwardLaserShot, transform.position + _laserOffset, Quaternion.identity);
+            Laser[] lasers = enemyLaser.GetComponentsInChildren<Laser>();
+
+            for (int i = 0; i < lasers.Length; i++)
+            {
+                lasers[i].AssignEnemyBackShotLaser();
+            }
         }
         yield return new WaitForSeconds(.2f);
         _enemySpeed = 4f;
@@ -242,7 +247,6 @@ public class Enemy : MonoBehaviour
             {
                 EnemyShieldCollision();
                 Destroy(collision.gameObject);
-                Destroy(collision.transform.parent.gameObject);
                 return;
             }
             Destroy(collision.gameObject);
@@ -340,7 +344,7 @@ public class Enemy : MonoBehaviour
         _laserOffset = new Vector3(0, 0, 0);
         FireLasers();
 
-        if (_player == null)
+        if(_player == null)
             return;
 
         Vector2 distance = transform.position - _player.transform.position;
@@ -397,5 +401,24 @@ public class Enemy : MonoBehaviour
         _canFireLasers = false;
 
         this.GetComponent<Collider2D>().enabled = false;
+    }
+    void EnemyShootingPowerup()
+    {
+        _canFireLasers = false;
+
+        GameObject[] powerups = GameObject.FindGameObjectsWithTag("Powerups");
+
+        if (powerups.Length <= 0)
+            return;
+
+        foreach (GameObject powerup in powerups)
+        {
+            Vector2 distance = transform.position - powerup.transform.position;
+            if (distance.x < _maxXDistance && distance.x > _minXDistance && distance.y < 8 && distance.y > 2f)
+            {
+                _canFireLasers = true;
+                FireLasers();
+            }
+        }
     }
 }

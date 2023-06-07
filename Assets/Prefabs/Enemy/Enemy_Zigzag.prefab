@@ -220,10 +220,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _enemyID: 5
-  _enemySpeed: 2
+  _enemySpeed: 3
   _audioSource: {fileID: 0}
   _explosionAudio: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
-  _laserPrefab: {fileID: 0}
+  _laserPrefab: {fileID: 8641242445118728836, guid: 114de916d9150824481c9db93cc2fc4e, type: 3}
   _bombPrefab: {fileID: 0}
   _chargedLaser: {fileID: 0}
   _chargedLaserPowerOn: {fileID: 0}
@@ -235,6 +235,11 @@ MonoBehaviour:
   _zigzagSpeed: 0.5
   _boosters: {fileID: 345357637}
   _telegraphBoostArea: {fileID: 1287863377}
+  _backwardLaserShot: {fileID: 0}
+  _maxXDistance: 1
+  _minXDistance: -1
+  _distanceBehindPlayer: 0
+  _laserOffset: {x: 0, y: 0, z: 0}
 --- !u!212 &3255283936064594114
 SpriteRenderer:
   m_ObjectHideFlags: 0
