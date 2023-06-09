@@ -74,6 +74,7 @@ public class SpawnManager : MonoBehaviour
                         case 4: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
                         case 5: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
                         case 6: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                        case 7: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
                     }
                     Enemy newEnemy = Instantiate(spawningEnemy, posToSpawn, Quaternion.identity);
                     _currentSpawnedAmount++;

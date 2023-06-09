@@ -2,10 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PowerupDetector : MonoBehaviour
+public class EnemyPowerupDetector : MonoBehaviour
 {
     [SerializeField] List<GameObject> powerups = new List<GameObject>();
-    
+    [SerializeField] Enemy _enemy;
+    [SerializeField] GameObject _lockedOnPowerup;
+
+    private void Start()
+    {
+        _enemy = GetComponentInParent<Enemy>();
+
+        if (_enemy == null)
+            Debug.LogError("Enemy is null");
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Powerups"))
@@ -17,14 +26,22 @@ public class PowerupDetector : MonoBehaviour
             powerups.Remove(collision.gameObject);
     }
 
-    public void PowerupMagnet(Player player)
+    private void Update()
     {
+        if (!_enemy)
+            return;
+
         if (powerups.Count <= 0)
             return;
 
         foreach (GameObject powerup in powerups)
         {
-            powerup.transform.position = Vector3.MoveTowards(powerup.transform.position, player.transform.position,1f * Time.deltaTime);
+            Vector2 distance = _enemy.transform.position - powerup.transform.position;
+            if (distance.y > 5f)
+            {
+                _lockedOnPowerup = powerup;
+                _enemy.EnemyShootingPowerup(_lockedOnPowerup);
+            }
         }
     }
 }

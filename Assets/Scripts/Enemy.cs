@@ -40,6 +40,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _distanceBehindPlayer;
     [SerializeField] Vector3 _laserOffset;
 
+    [Header("LockOn Powerup Data")]
+    [SerializeField] GameObject _missileToShootAtPowerups;
+    [SerializeField] GameObject _lockOnVisual;
+
     bool _hasFiredShotBackwards = false;
     bool _isNearPlayer;
 
@@ -48,11 +52,16 @@ public class Enemy : MonoBehaviour
     float _fireRate = 3.0f;
     float _canFire = -1f;
     bool _canFireLasers = false;
+    private int shotAmount;
     SpawnManager _spawnManager;
     bool _isChargedLaserFiring = false;
 
     bool _hasObtainedPlayerPos;
     bool _hasLockedOntoPlayer;
+    float dodgeTimer;
+    private EnemyMissile missile;
+    private Powerup lockedOnPowerup;
+
     public int EnemyID { get { return _enemyID; } }
 
     void Start()
@@ -82,13 +91,14 @@ public class Enemy : MonoBehaviour
     {
         switch (_enemyID)
         {
-            case 0: NormalShipBehavior(); FireLasers(); EnemyShootingPowerup(); break;
+            case 0: NormalShipBehavior(); FireLasers(); break;
             case 1: BlockadeShipBehavior(); break;
             case 2: LeftSideSwipperShipBehavior(); FireBombs(); break;
             case 3: RightSideSwipperShipBehavior(); FireBombs(); break;
             case 4: ChargeLaserShipBehavior(); FireChargedLaser(); break;
-            case 5: ZigZagShipBehavior(); ChargeAtPlayer(); EnemyShootingPowerup(); break;
-            case 6: BackwardShootingShipBehavior(); EnemyShootingPowerup(); break;
+            case 5: ZigZagShipBehavior(); ChargeAtPlayer(); break;
+            case 6: BackwardShootingShipBehavior(); break;
+            case 7: DodgeShipBehavior(); break;
         }
     }
     void FireLasers()
@@ -106,7 +116,7 @@ public class Enemy : MonoBehaviour
 
             for (int i = 0; i < lasers.Length; i++)
             {
-                    lasers[i].AssignEnemyLaser();
+                lasers[i].AssignEnemyLaser();
             }
         }
     }
@@ -344,7 +354,7 @@ public class Enemy : MonoBehaviour
         _laserOffset = new Vector3(0, 0, 0);
         FireLasers();
 
-        if(_player == null)
+        if (_player == null)
             return;
 
         Vector2 distance = transform.position - _player.transform.position;
@@ -366,6 +376,21 @@ public class Enemy : MonoBehaviour
             _isNearPlayer = false;
             int randomX = Random.Range(-8, 8);
             transform.position = new Vector3(randomX, 12, 0);
+        }
+    }
+    void DodgeShipBehavior()
+    {
+        transform.Translate(Vector3.down * _enemySpeed * Time.deltaTime);
+        if (transform.position.x > 11)
+            transform.position = new Vector3(-9, transform.position.y, 0);
+
+        if (transform.position.x < -11)
+            transform.position = new Vector3(9, transform.position.y, 0);
+
+        if (transform.position.y < -5.5f)
+        {
+            float randomX = Random.Range(-8f, 8f);
+            transform.position = new Vector3(randomX, 8f, 0f);
         }
     }
     void EnemyShieldCollision()
@@ -402,23 +427,55 @@ public class Enemy : MonoBehaviour
 
         this.GetComponent<Collider2D>().enabled = false;
     }
-    void EnemyShootingPowerup()
+    public void EnemyShootingPowerup(GameObject powerup)
+    {
+        GameObject powerupObject = powerup;
+        Powerup targetedPowerup = powerupObject.GetComponent<Powerup>();
+
+        if (targetedPowerup == null)
+            return; 
+
+        StartCoroutine(StartEnemyPowerupShot(targetedPowerup));
+    }
+    IEnumerator StartEnemyPowerupShot(Powerup powerup)
     {
         _canFireLasers = false;
-
-        GameObject[] powerups = GameObject.FindGameObjectsWithTag("Powerups");
-
-        if (powerups.Length <= 0)
-            return;
-
-        foreach (GameObject powerup in powerups)
+        if (shotAmount < 1)
         {
-            Vector2 distance = transform.position - powerup.transform.position;
-            if (distance.x < _maxXDistance && distance.x > _minXDistance && distance.y < 8 && distance.y > 2f)
-            {
-                _canFireLasers = true;
-                FireLasers();
-            }
+            shotAmount++;
+            GameObject lockOn = Instantiate(_lockOnVisual, powerup.transform.position, Quaternion.identity);
+            lockOn.transform.parent = powerup.transform;
+            lockedOnPowerup = powerup;
+            yield return new WaitForSeconds(1f);
+            GameObject enemyMissile = Instantiate(_missileToShootAtPowerups, transform.position + _laserOffset, Quaternion.identity);
+            missile = enemyMissile.GetComponent<EnemyMissile>();
+            MissileShooting(lockedOnPowerup);
+            
+        }else if(shotAmount >= 1)
+        {
+            _canFireLasers = true;
+            yield return new WaitForSeconds(10f);
+            shotAmount = 0;
+            StopAllCoroutines();
+        }
+        
+    }
+    void MissileShooting(Powerup powerup)
+    {
+        missile.DetectPowerup(powerup.gameObject.transform);
+    }
+    public void DodgePlayerShot(Vector3 Direction)
+    {
+        StartCoroutine(StartDodging(Direction));
+    }
+    IEnumerator StartDodging(Vector3 Direction)
+    {
+        dodgeTimer = 0;
+        while (dodgeTimer < 1f)
+        {
+            dodgeTimer += Time.deltaTime;
+            transform.Translate(Direction * 2f * Time.deltaTime);
+            yield return null;
         }
     }
 }

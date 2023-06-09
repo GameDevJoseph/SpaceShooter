@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
         _powerupDetector = GetComponentInChildren<PowerupDetector>();
 
         if (_powerupDetector == null)
-            Debug.Log("Powerup Detector is null");
+            Debug.LogError("Powerup Detector is null");
 
         if (_mainCamera == null)
             Debug.LogError("Main Camera is null");
