@@ -63,6 +63,7 @@ public class Enemy : MonoBehaviour
     private Powerup lockedOnPowerup;
 
     public int EnemyID { get { return _enemyID; } }
+    
 
     void Start()
     {
@@ -71,6 +72,9 @@ public class Enemy : MonoBehaviour
         _animator = GetComponent<Animator>();
         _player = GameObject.Find("Player").GetComponent<Player>();
         _canFireLasers = true;
+
+        
+
 
         if (_spawnManager == null)
             Debug.LogError("Spawn Manager is null");
@@ -419,6 +423,11 @@ public class Enemy : MonoBehaviour
         if (_player != null)
             _player.AddToScore(10);
 
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
+
         StopAllCoroutines();
         _audioSource.Play();
         _enemySpeed = 0f;
@@ -433,9 +442,12 @@ public class Enemy : MonoBehaviour
         Powerup targetedPowerup = powerupObject.GetComponent<Powerup>();
 
         if (targetedPowerup == null)
-            return; 
+            return;
 
-        StartCoroutine(StartEnemyPowerupShot(targetedPowerup));
+        if (_lockOnVisual == null)
+            return;
+
+            StartCoroutine(StartEnemyPowerupShot(targetedPowerup));
     }
     IEnumerator StartEnemyPowerupShot(Powerup powerup)
     {
@@ -462,6 +474,8 @@ public class Enemy : MonoBehaviour
     }
     void MissileShooting(Powerup powerup)
     {
+        if (powerup == null)
+            return;
         missile.DetectPowerup(powerup.gameObject.transform);
     }
     public void DodgePlayerShot(Vector3 Direction)
@@ -478,4 +492,19 @@ public class Enemy : MonoBehaviour
             yield return null;
         }
     }
+    public void MissileCollision()
+    {
+        if (_isEnemyShielded)
+        {
+            EnemyShieldCollision();
+            
+            return;
+        }
+        if (_chargedLaser != null)
+            Destroy(_chargedLaser);
+
+        EnemyCollision();
+        Destroy(this.gameObject, 2.8f);
+    }
 }
+

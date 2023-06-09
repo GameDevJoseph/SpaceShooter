@@ -35,6 +35,7 @@ public class Powerup : MonoBehaviour
                 case 4: player.LifeUp(); break;
                 case 5: player.MinesActive(); break;
                 case 6: player.EMP(); break;
+                case 7: player.MissileActive(); break;
                 default: break;
             }
             Destroy(this.gameObject);

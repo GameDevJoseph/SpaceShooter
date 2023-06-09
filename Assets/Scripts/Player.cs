@@ -50,8 +50,9 @@ public class Player : MonoBehaviour
     [SerializeField] float _camShakeDuration = 3f;
     [SerializeField] float _camShakeMultiplier = 1f;
 
+    [SerializeField] GameObject _missilePrefab;
 
-    
+    [SerializeField] bool _isMissileActive = false;
     bool _isTripleShotActive = false;
     bool _isSpeedBoostActive = false;
     bool _isShieldActive = false;
@@ -60,6 +61,8 @@ public class Player : MonoBehaviour
     float _canFire = -1f;
     UIManager _uiManager;
     bool _isPlayerEMPed;
+    [SerializeField] PlayerMissile[] availableMissiles;
+    
 
     void Start()
     {
@@ -97,6 +100,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.C))
             _powerupDetector.PowerupMagnet(this);
+
     }
     void FireLaser()
     {
@@ -105,15 +109,20 @@ public class Player : MonoBehaviour
 
         _canFire = Time.time + _fireRate;
 
-        if(_isMineActive)
+        if(_isMissileActive)
+        {
+            SpawnMissiles();
+        }
+        else if (_isMineActive)
         {
             Instantiate(_MinePrefab, transform.position, Quaternion.identity);
-        }else
+        }
+        else
         if (_isTripleShotActive)
         {
             Instantiate(_tripleShotPrefab, transform.position + _laserSpawnOffset, Quaternion.identity);
         }
-        else if(_laserAmmoCount > 0)
+        else if (_laserAmmoCount > 0)
         {
             Instantiate(_laserPrefab, transform.position + _laserSpawnOffset, Quaternion.identity);
             _laserAmmoCount--;
@@ -122,12 +131,18 @@ public class Player : MonoBehaviour
                 _laserAmmoCount = 0;
 
             _uiManager.UpdateAmmoText(_laserAmmoCount, _maxAmmo);
-        }else if(_laserAmmoCount <= 0)
+        }
+        else if (_laserAmmoCount <= 0)
         {
             _audioSource.PlayOneShot(_noLaserAmmo);
             return;
         }
         _audioSource.Play();
+    }
+    public void SpawnMissiles()
+    {
+        Instantiate(_missilePrefab, transform.position, Quaternion.identity);
+        _isMissileActive = false;
     }
     void CalculateMovement()
     {
@@ -146,7 +161,7 @@ public class Player : MonoBehaviour
             transform.Translate(direction * (_moveSpeed * _speedMultiplier) * Time.deltaTime);
 
 
-        
+
         if (transform.position.x > _rightBoundary)
             SetNewPosition(new Vector3(_leftBoundary, transform.position.y, transform.position.z));
 
@@ -165,7 +180,7 @@ public class Player : MonoBehaviour
     }
     public void Damage()
     {
-        if(_isShieldActive)
+        if (_isShieldActive)
         {
             _shieldRenderer = _shieldVisualizer.gameObject.GetComponent<SpriteRenderer>();
             _shieldDurability--;
@@ -190,6 +205,10 @@ public class Player : MonoBehaviour
         _isTripleShotActive = true;
         StartCoroutine(TripleShotPowerDownRoutine());
     }
+    public void MissileActive()
+    {
+        _isMissileActive = true;
+    }
     public void SpeedBoostActive()
     {
         _isSpeedBoostActive = true;
@@ -202,7 +221,7 @@ public class Player : MonoBehaviour
         _shieldVisualizer.SetActive(true);
 
         UpdateShieldVisual();
-        
+
     }
     public void MinesActive()
     {
@@ -216,7 +235,7 @@ public class Player : MonoBehaviour
             case 0: _isShieldActive = false; _shieldVisualizer.SetActive(false); break;
             case 1: _shieldRenderer.color = Color.red; break;
             case 2: _shieldRenderer.color = Color.yellow; break;
-            case 3: _shieldRenderer.color = Color.green;  break;
+            case 3: _shieldRenderer.color = Color.green; break;
             default: break;
         }
     }
@@ -295,21 +314,17 @@ public class Player : MonoBehaviour
     {
         Vector3 camOriginalPos = _mainCamera.transform.localPosition;
         float elapsedTime = 0f;
-        while(elapsedTime < _camShakeDuration)
+        while (elapsedTime < _camShakeDuration)
         {
             float randomX = Random.Range(-0.25f, .25f) * _camShakeMultiplier;
             float randomY = Random.Range(-0.25f, .25f) * _camShakeMultiplier;
             _mainCamera.transform.position = new Vector3
-                (camOriginalPos.x + randomX, 
-                camOriginalPos.y + randomY, 
+                (camOriginalPos.x + randomX,
+                camOriginalPos.y + randomY,
                 camOriginalPos.z);
             elapsedTime += Time.deltaTime;
             yield return null;
             _mainCamera.transform.position = camOriginalPos;
         }
     }
-
-    
-
-    
 }

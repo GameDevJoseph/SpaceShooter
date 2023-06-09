@@ -20,8 +20,7 @@ public class MissileDetection : MonoBehaviour
 
         foreach (Enemy enemy in _enemies)
         {
-            Vector2 distanceToEnemy = transform.position - enemy.transform.position;
-            if (distanceToEnemy.y <= 8 && !_hasLockedIn)
+            if (!_hasLockedIn)
             {
                 _lockedOnEnemy = enemy;
                 _missile.AssignEnemy(_lockedOnEnemy);
@@ -29,7 +28,7 @@ public class MissileDetection : MonoBehaviour
             }
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
@@ -37,10 +36,12 @@ public class MissileDetection : MonoBehaviour
             if (enemy == null)
                 return;
 
+            if (_enemies.Contains(enemy))
+                return;
+
             _enemies.Add(enemy);
         }
     }
-
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
@@ -50,6 +51,7 @@ public class MissileDetection : MonoBehaviour
                 return;
 
             _enemies.Remove(enemy);
+            _hasLockedIn = false;
         }
     }
 }
