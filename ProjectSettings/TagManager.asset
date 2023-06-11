@@ -8,6 +8,7 @@ TagManager:
   - Enemy
   - Powerups
   - Missile
+  - Boss
   layers:
   - Default
   - TransparentFX

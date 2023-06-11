@@ -315,7 +315,7 @@ GameObject:
   - component: {fileID: 7646167518174915249}
   m_Layer: 0
   m_Name: Red Hawk Boss
-  m_TagString: Untagged
+  m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -403,8 +403,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _bossID: 0
-  _bossCurrentHP: 5
-  _bossMaxHP: 5
+  _bossCurrentHP: 100
+  _bossMaxHP: 100
   _bossZigZagSpeed: 2
   _deathExplosions:
   - {fileID: 4619902635957005609}

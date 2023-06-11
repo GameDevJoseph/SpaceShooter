@@ -62,6 +62,8 @@ public class SpawnManager : MonoBehaviour
                     {
                         posToSpawn = new Vector3(0, 12f, 0);
                         Instantiate(_bossPrefab, posToSpawn, Quaternion.identity);
+                        _enemyWaveAmount[_currentWave] = 1;
+                        _waveEnemyCount = 1;
                         _currentSpawnedAmount++;
                     }
                     else

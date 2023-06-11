@@ -32,18 +32,23 @@ public class Boss : MonoBehaviour
     SpawnManager _spawnManager;
     UIManager _uiManager;
     Collider2D _collider2D;
+    Player _player;
     
 
     private void Start()
     {
+        _player = GameObject.Find("Player").GetComponent<Player>();
         _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
         _collider2D = GetComponent<Collider2D>();
         if (_uiManager == null)
-            Debug.Log("UI Manager is null");
+            Debug.LogError("UI Manager is null");
 
         if (_spawnManager == null)
-            Debug.Log("Spawn Manager is null");
+            Debug.LogError("Spawn Manager is null");
+
+        if(_player == null)
+            Debug.LogError("Player is null");
 
         _bossCurrentHP = _bossMaxHP;
 
@@ -111,20 +116,6 @@ public class Boss : MonoBehaviour
             }
         }
     }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if(collision.CompareTag("Laser"))
-        {
-            _bossCurrentHP--;
-            _uiManager.UpdateMaxHealth(_bossCurrentHP);
-            Destroy(collision.gameObject);
-
-            if(_bossCurrentHP <= 0)
-            {
-                _spawnManager.OnEnemyDeath();
-            }
-        }
-    }
     void FiringBigLasers()
     {
         _twinLaserTelegraph.SetActive(true);
@@ -172,6 +163,20 @@ public class Boss : MonoBehaviour
         }else
         {
             specialAttackTimer -= Time.deltaTime;
+        }
+    }
+
+
+    public void Damage(int damage)
+    {
+        _bossCurrentHP -= damage;
+        _uiManager.UpdateMaxHealth(_bossCurrentHP);
+        if (_bossCurrentHP <= 0)
+        {
+            if (_player != null)
+                _player.AddToScore(1000);
+
+            _spawnManager.OnEnemyDeath();
         }
     }
 }

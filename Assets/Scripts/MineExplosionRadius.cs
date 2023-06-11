@@ -20,6 +20,11 @@ public class MineExplosionRadius : MonoBehaviour
         {
             collision.GetComponent<Player>().Damage();
         }
+
+        if (collision.CompareTag("Boss"))
+        {
+            collision.GetComponent<Boss>().Damage(5);
+        }
     }
 
     

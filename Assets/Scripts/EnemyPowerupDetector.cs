@@ -39,6 +39,9 @@ public class EnemyPowerupDetector : MonoBehaviour
             if (_enemy == null)
                 return;
 
+            if (powerup == null)
+                return;
+
             Vector2 distance = _enemy.transform.position - powerup.transform.position;
             if (distance.y > 5f)
             {

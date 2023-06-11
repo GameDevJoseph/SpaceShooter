@@ -86,5 +86,12 @@ public class Laser : MonoBehaviour
             Destroy(collision.gameObject);
             Destroy(this.gameObject);
         }
+
+        if(collision.CompareTag("Boss"))
+        {
+            Boss boss = collision.GetComponent<Boss>();
+            boss.Damage(1);
+            Destroy(this.gameObject);
+        }
     }
 }

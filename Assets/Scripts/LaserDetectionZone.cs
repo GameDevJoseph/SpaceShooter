@@ -39,9 +39,9 @@ public class LaserDetectionZone : MonoBehaviour
                 return;
 
             Vector2 distance = _enemy.transform.position - laser.transform.position;
-            if (distance.y > 1.5f && distance.x < 1f && distance.x > 0)
+            if (distance.y > 2f && distance.x < 1f && distance.x > 0)
                 _enemy.DodgePlayerShot(Vector3.right);
-            else if (distance.y > 1.5f && distance.x > -1f && distance.x < 0)
+            else if (distance.y > 2f && distance.x > -1f && distance.x < 0)
                 _enemy.DodgePlayerShot(Vector3.left);
         }
     }

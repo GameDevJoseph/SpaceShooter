@@ -50,6 +50,13 @@ public class PlayerMissile : MonoBehaviour
             Destroy(_lockOn.gameObject);
             enemy.MissileCollision();
         }
+
+        if(collision.CompareTag("Boss"))
+        {
+            Boss boss = collision.GetComponent<Boss>();
+            boss.Damage(10);
+            Destroy(this.gameObject);
+        }
     }
 
     public void AssignEnemy(Enemy enemy)

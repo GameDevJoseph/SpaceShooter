@@ -214,6 +214,6 @@ MonoBehaviour:
   _targetedEnemy: {fileID: 0}
   _enemiesFromMissileRadius: {fileID: 6317370982772547579}
   _lockOnVisual: {fileID: 1429900935076589692, guid: 81ccedc74a7748e4c8649a0cf61a0e4d, type: 3}
-  _missileNonTargetedSpeed: 1
+  _missileNonTargetedSpeed: 3
   _missileTargetedSpeed: 7
-  player: {fileID: 0}
+  _lockOn: {fileID: 0}
