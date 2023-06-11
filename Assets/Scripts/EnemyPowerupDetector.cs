@@ -36,6 +36,9 @@ public class EnemyPowerupDetector : MonoBehaviour
 
         foreach (GameObject powerup in powerups)
         {
+            if (_enemy == null)
+                return;
+
             Vector2 distance = _enemy.transform.position - powerup.transform.position;
             if (distance.y > 5f)
             {

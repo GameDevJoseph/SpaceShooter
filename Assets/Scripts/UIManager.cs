@@ -17,6 +17,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] bool _canThrust = false;
     [SerializeField] float _refillThrusterSpeed = 0.1f;
 
+    [SerializeField] Slider _bossHealthDisplay;
+    [SerializeField] Image _bossHealthFillAreaColor;
 
     
     public bool CanThrust { get { return _canThrust; } }
@@ -117,5 +119,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
+
+    public void SetMaxHealth(int maxHealth)
+    {
+        _bossHealthDisplay.maxValue = maxHealth;
+        _bossHealthDisplay.value = maxHealth;
+    }
+
+    public void UpdateMaxHealth(int currentHealth)
+    {
+        _bossHealthDisplay.value = currentHealth;
+
+        float healthPercentage = (_bossHealthDisplay.value / _bossHealthDisplay.maxValue) * 100;
+
+        if (healthPercentage >= 75)
+            _bossHealthFillAreaColor.color = Color.green;
+        else if(healthPercentage < 75 && healthPercentage >= 50)
+            _bossHealthFillAreaColor.color = Color.yellow;
+        else
+            _bossHealthFillAreaColor.color = Color.red;
+    }
+
+    public void DisplayHealthVisual(bool v)
+    {
+        _bossHealthDisplay.gameObject.SetActive(v);
+    }
 
 }
