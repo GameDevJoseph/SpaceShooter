@@ -4,42 +4,58 @@ using UnityEngine;
 
 public class Boss : MonoBehaviour
 {
+    [Header("Boss Data")]
     [SerializeField] int _bossID;
     [SerializeField] int _bossCurrentHP = 50;
     [SerializeField] int _bossMaxHP = 100;
-    
     [SerializeField] float _bossZigZagSpeed;
+    
 
+    [Header("Boss Visual Data")]
     [SerializeField] GameObject[] _deathExplosions;
     [SerializeField] GameObject _twinLaserTelegraph;
-
-    [SerializeField] GameObject _twinLaserPrefab;
-    [SerializeField] GameObject _laserPrefab;
-
+    
+    [Header("Boss Weapon Data")]
     [SerializeField] GameObject _missiles;
+    [SerializeField] GameObject _twinLaserPrefab;
     [SerializeField] Vector3[] _posToSpawnMissiles;
-    private float _fireRate = 3f;
-    private float _canFire = 0.1f;
+    [SerializeField] GameObject _laserPrefab;
     [SerializeField] Vector3 _laserOffset;
-    [SerializeField] UIManager _uiManager;
+
+    float _fireRate = 3f;
+    float _canFire = 0.1f;
     float _bossSpeed = 2f;
     bool _inSetPosition = false;
-    float _bossStartSpeed = 2f;
     int _direction = 1;
+    float specialAttackTimer;
+
+    SpawnManager _spawnManager;
+    UIManager _uiManager;
+    Collider2D _collider2D;
+    
 
     private void Start()
     {
+        _spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
+        _collider2D = GetComponent<Collider2D>();
         if (_uiManager == null)
             Debug.Log("UI Manager is null");
 
-
+        if (_spawnManager == null)
+            Debug.Log("Spawn Manager is null");
 
         _bossCurrentHP = _bossMaxHP;
 
-        _uiManager.DisplayHealthVisual(true);
+        
         _uiManager.SetMaxHealth(_bossMaxHP);
-        StartCoroutine(RandomAttack());
+        _uiManager.UpdateMaxHealth(_bossCurrentHP);
+
+        specialAttackTimer = 15f;
+
+        if (_collider2D != null)
+            _collider2D.enabled = false;
+
     }
 
     private void Update()
@@ -49,19 +65,29 @@ public class Boss : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, 5, 0);
             _bossSpeed = 0f;
+            _uiManager.DisplayHealthVisual(true);
             _inSetPosition = true;
         }
 
         if (_bossCurrentHP > 0 && _inSetPosition)
         {
             FireLasers();
-            _bossZigZagSpeed = 2f;
             transform.Translate(Vector3.left * _direction * _bossZigZagSpeed * Time.deltaTime);
 
+            if (_collider2D != null)
+                _collider2D.enabled = true;
+
+            RandomAttack();
             if (transform.position.x >= 6)
+            {
+                transform.position = new Vector3(6, transform.position.y, 0);
                 _direction *= -1;
+            }
             else if (transform.position.x <= -6)
+            {
+                transform.position = new Vector3(-6, transform.position.y, 0);
                 _direction *= -1;
+            }
                 
         }
         if (_bossCurrentHP <= 0)
@@ -92,17 +118,19 @@ public class Boss : MonoBehaviour
             _bossCurrentHP--;
             _uiManager.UpdateMaxHealth(_bossCurrentHP);
             Destroy(collision.gameObject);
+
+            if(_bossCurrentHP <= 0)
+            {
+                _spawnManager.OnEnemyDeath();
+            }
         }
     }
-
-    [ContextMenu("Twin Lasers")]
     void FiringBigLasers()
     {
         _twinLaserTelegraph.SetActive(true);
         StartCoroutine(TwinLasers());
     }
 
-    [ContextMenu("Fire Missile")]
     void MissileFiring()
     {
         for(int i = 0; i < _posToSpawnMissiles.Length; i++)
@@ -131,16 +159,19 @@ public class Boss : MonoBehaviour
         Destroy(this.gameObject, 1.5f);
     }
 
-
-    IEnumerator RandomAttack()
+    void RandomAttack()
     {
-        yield return new WaitForSeconds(10f);
-        int value = Random.Range(0, 2);
-        switch(value)
+        if (specialAttackTimer <= 0)
         {
-            case 0: FiringBigLasers(); break;
-            case 1: MissileFiring(); break;
+            int value = Random.Range(0, 2);
+            switch (value)
+            {
+                case 0: FiringBigLasers(); specialAttackTimer = 30f; break;
+                case 1: MissileFiring();  specialAttackTimer = 15f; break;
+            }
+        }else
+        {
+            specialAttackTimer -= Time.deltaTime;
         }
-        yield return new WaitForSeconds(10f);
     }
 }

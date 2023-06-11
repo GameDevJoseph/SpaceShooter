@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class BossMissiles : MonoBehaviour
 {
+    [SerializeField] Player _player;
     [SerializeField] GameObject _telegraphBoostArea;
     [SerializeField] float _enemySpeed;
+
     bool _hasObtainedPlayerPos;
-    [SerializeField] Player _player;
     bool _hasLockedOntoPlayer;
-
-
-   
-
     private void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();

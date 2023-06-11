@@ -405,7 +405,7 @@ MonoBehaviour:
   _bossID: 0
   _bossCurrentHP: 5
   _bossMaxHP: 5
-  _bossZigZagSpeed: 0
+  _bossZigZagSpeed: 2
   _deathExplosions:
   - {fileID: 4619902635957005609}
   - {fileID: 4619902634593912639}
@@ -414,16 +414,15 @@ MonoBehaviour:
   - {fileID: 4619902635273241815}
   - {fileID: 4619902635443253987}
   _twinLaserTelegraph: {fileID: 7646167517212794398}
-  _twinLaserPrefab: {fileID: 7646167518332535187}
-  _laserPrefab: {fileID: 2334857837171334487, guid: 6f47e8e495d6b6145bf19211e76fd6ea, type: 3}
   _missiles: {fileID: 2428581457799920022, guid: 4085fcd6accecff4eb996c95c88961c5, type: 3}
+  _twinLaserPrefab: {fileID: 7646167518332535187}
   _posToSpawnMissiles:
   - {x: 0.6, y: 0.25, z: 0}
   - {x: 1, y: 0.5, z: 0}
   - {x: -1, y: -0.5, z: 0}
   - {x: -0.6, y: -0.25, z: 0}
+  _laserPrefab: {fileID: 2334857837171334487, guid: 6f47e8e495d6b6145bf19211e76fd6ea, type: 3}
   _laserOffset: {x: 0, y: -0.05, z: 0}
-  _uiManager: {fileID: 0}
 --- !u!60 &7646167518174915248
 PolygonCollider2D:
   m_ObjectHideFlags: 0
