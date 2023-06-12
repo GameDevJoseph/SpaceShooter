@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyPowerupDetector : MonoBehaviour
 {
-    [SerializeField] List<GameObject> powerups = new List<GameObject>();
+    [SerializeField] List<GameObject> _powerups = new List<GameObject>();
     [SerializeField] Enemy _enemy;
     [SerializeField] GameObject _lockedOnPowerup;
 
@@ -18,12 +18,12 @@ public class EnemyPowerupDetector : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Powerups"))
-            powerups.Add(collision.gameObject);
+            _powerups.Add(collision.gameObject);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Powerups"))
-            powerups.Remove(collision.gameObject);
+            _powerups.Remove(collision.gameObject);
     }
 
     private void Update()
@@ -31,10 +31,10 @@ public class EnemyPowerupDetector : MonoBehaviour
         if (!_enemy)
             return;
 
-        if (powerups.Count <= 0)
+        if (_powerups.Count <= 0)
             return;
 
-        foreach (GameObject powerup in powerups)
+        foreach (GameObject powerup in _powerups)
         {
             if (_enemy == null)
                 return;

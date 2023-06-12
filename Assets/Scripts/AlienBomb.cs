@@ -8,6 +8,8 @@ public class AlienBomb : MonoBehaviour
     [SerializeField] GameObject _explosionPrefab;
 
     SpriteRenderer _spriteRenderer;
+    private float _flashTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,8 +19,8 @@ public class AlienBomb : MonoBehaviour
             Debug.LogError("SpriteRenderer is null");
 
         StartCoroutine(StopBomb());
-        StartCoroutine(BombFlash());
-        StartCoroutine(ExplodeBomb());
+        
+        
     }
 
     // Update is called once per frame
@@ -31,22 +33,26 @@ public class AlienBomb : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(2f, 4f));
         _bombSpeed = 0;
+        StartCoroutine(BombFlash());
     }
 
     IEnumerator BombFlash()
     {
         yield return new WaitForSeconds(3f);
-        while (true)
+        _flashTimer = 0;
+        while (_flashTimer < 3f)
         {
+            _flashTimer += Time.deltaTime * 60f;
             _spriteRenderer.color = Color.red;
             yield return new WaitForSeconds(0.15f);
             _spriteRenderer.color = Color.white;
             yield return new WaitForSeconds(0.15f);
         }
+        StartCoroutine(ExplodeBomb());
     }
     IEnumerator ExplodeBomb()
     {
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(.5f);
         Instantiate(_explosionPrefab.transform, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

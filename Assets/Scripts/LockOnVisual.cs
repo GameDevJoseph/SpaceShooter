@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LockOnVisual : MonoBehaviour
 {
-
     void Update()
     {
         float rotationAmount = Mathf.PingPong(0.5f * Time.time * 1f, 1f);

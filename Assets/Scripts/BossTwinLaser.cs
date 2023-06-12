@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class BossTwinLaser : MonoBehaviour
 {
-    Player player;
+    Player _player;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Player"))
         {
-            player = collision.GetComponent<Player>();
-            player.Damage();
+            _player = collision.GetComponent<Player>();
+            _player.Damage();
         }
     }
 
@@ -18,7 +18,7 @@ public class BossTwinLaser : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            player = collision.GetComponent<Player>();
+            _player = collision.GetComponent<Player>();
             StartCoroutine(DamageOverTime());
         }
     }
@@ -32,8 +32,8 @@ public class BossTwinLaser : MonoBehaviour
     IEnumerator DamageOverTime()
     {
         yield return new WaitForSeconds(3f);
-        if (player != null)
-            player.Damage();
+        if (_player != null)
+            _player.Damage();
 
         StopAllCoroutines();
     }

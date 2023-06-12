@@ -19,12 +19,15 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] Slider _bossHealthDisplay;
     [SerializeField] Image _bossHealthFillAreaColor;
+    [SerializeField] TMP_Text _newWaveText;
 
-    
+    float _timeBetweenWaves;
+
     public bool CanThrust { get { return _canThrust; } }
     private void Start()
     {
         _scoreText.text = "Score: " + 0;
+        _newWaveText.gameObject.SetActive(false);
         _gameoverText.gameObject.SetActive(false);
         _restartText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
@@ -102,8 +105,24 @@ public class UIManager : MonoBehaviour
     public void ThrustOn() => _canThrust = true;
     public void ThrustOff() => _canThrust = false;
 
+    public void StartNewWaveMessage()
+    {
+        StartCoroutine(NewWaveMessage());
+    }
 
-
+    IEnumerator NewWaveMessage()
+    {
+        _timeBetweenWaves = 1f;
+        while (_timeBetweenWaves > 0)
+        {
+            _timeBetweenWaves -= Time.deltaTime * 60f;
+            yield return new WaitForSeconds(0.2f);
+            _newWaveText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.2f);
+            _newWaveText.gameObject.SetActive(false);
+        }
+        _newWaveText.gameObject.SetActive(false);
+    }
     IEnumerator ThrustRefill()
     {
         yield return new WaitForSeconds(5f);

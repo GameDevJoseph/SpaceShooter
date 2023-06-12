@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class EnemyMissile : MonoBehaviour
 {
-    Transform targetPowerup;
+    Transform _targetPowerup;
 
     private void Update()
     {
-        if (targetPowerup == null)
+        if (_targetPowerup == null)
         {
             transform.Translate(Vector2.down * 5f * Time.deltaTime);
             return;
         }
 
         transform.Translate(Vector2.down * 5f * Time.deltaTime);
-        Vector2 distance = targetPowerup.transform.position - transform.position;
+        Vector2 distance = _targetPowerup.transform.position - transform.position;
         distance.Normalize();
         float rotateAngle = Mathf.Atan2(distance.y, distance.x) * Mathf.Rad2Deg + 90;
         Quaternion angle = Quaternion.AngleAxis(rotateAngle, Vector3.forward);
@@ -41,6 +41,6 @@ public class EnemyMissile : MonoBehaviour
 
     public void DetectPowerup(Transform powerup)
     {
-        targetPowerup = powerup;
+        _targetPowerup = powerup;
     }
 }

@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class PowerupDetector : MonoBehaviour
 {
-    [SerializeField] List<GameObject> powerups = new List<GameObject>();
+    [SerializeField] List<GameObject> _powerups = new List<GameObject>();
     
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Powerups"))
-            powerups.Add(collision.gameObject);
+            _powerups.Add(collision.gameObject);
     }
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Powerups"))
-            powerups.Remove(collision.gameObject);
+            _powerups.Remove(collision.gameObject);
     }
 
     public void PowerupMagnet(Player player)
     {
-        if (powerups.Count <= 0)
+        if (_powerups.Count <= 0)
             return;
 
-        foreach (GameObject powerup in powerups)
+        foreach (GameObject powerup in _powerups)
         {
             powerup.transform.position = Vector3.MoveTowards(powerup.transform.position, player.transform.position,1f * Time.deltaTime);
         }

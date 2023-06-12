@@ -32,14 +32,19 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] int _waveEnemyCount;
 
 
-    Vector3 posToSpawn;
-
+    Vector3 _posToSpawn;
+    UIManager _UIManager;
     bool _stopSpawning = false;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        _UIManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
+
+        if (_UIManager == null)
+            Debug.LogError("UI Manager is null");
+
         _waveEnemyCount = _enemyWaveAmount[0];
     }
 
@@ -51,23 +56,24 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnRoutine()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
         while (!_stopSpawning && _currentWave <= _enemyWaveAmount.Count)
         {
             if (_enemyWaveAmount[_currentWave] > 0)
             {
                 if (_currentSpawnedAmount < _waveEnemyCount)
                 {
-                    if (_currentWave % 10 == 0)
+                    if (_currentWave % 5 == 0)
                     {
-                        posToSpawn = new Vector3(0, 12f, 0);
-                        Instantiate(_bossPrefab, posToSpawn, Quaternion.identity);
+                        _posToSpawn = new Vector3(0, 12f, 0);
+                        Instantiate(_bossPrefab, _posToSpawn, Quaternion.identity);
                         _enemyWaveAmount[_currentWave] = 1;
                         _waveEnemyCount = 1;
                         _currentSpawnedAmount++;
                     }
                     else
                     {
+                        
                         Enemy spawningEnemy;
                         int spawnPercentage = Random.Range(0, 101);
                         if (spawnPercentage <= 60)
@@ -83,19 +89,19 @@ public class SpawnManager : MonoBehaviour
 
                         switch (spawningEnemy.EnemyID)
                         {
-                            case 0: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
-                            case 1: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
-                            case 2: posToSpawn = new Vector3(-12, Random.Range(3f, 6f), 0); break;
-                            case 3: posToSpawn = new Vector3(12, Random.Range(3f, 6f), 0); break;
-                            case 4: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
-                            case 5: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
-                            case 6: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
-                            case 7: posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                            case 0: _posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                            case 1: _posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                            case 2: _posToSpawn = new Vector3(-12, Random.Range(3f, 6f), 0); break;
+                            case 3: _posToSpawn = new Vector3(12, Random.Range(3f, 6f), 0); break;
+                            case 4: _posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                            case 5: _posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                            case 6: _posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
+                            case 7: _posToSpawn = new Vector3(Random.Range(-8f, 8f), 7f, 0); break;
                         }
-                        Enemy newEnemy = Instantiate(spawningEnemy, posToSpawn, Quaternion.identity);
+                        Enemy newEnemy = Instantiate(spawningEnemy, _posToSpawn, Quaternion.identity);
                         _currentSpawnedAmount++;
                         newEnemy.transform.parent = _enemyContainer.transform;
-                        yield return new WaitForSeconds(5f);
+                        yield return new WaitForSeconds(1f);
                     }
                 }
                 else
@@ -103,7 +109,8 @@ public class SpawnManager : MonoBehaviour
             }
             else
             {
-                yield return new WaitForSeconds(3f);
+                _UIManager.StartNewWaveMessage();
+                yield return new WaitForSeconds(5f);
                 _currentSpawnedAmount = 0;
                 _enemyWaveAmount.Add(_waveAmount += _amountToAddToWave);
                 yield return new WaitForSeconds(1f);
@@ -112,6 +119,7 @@ public class SpawnManager : MonoBehaviour
             }
         }
     }
+    
     IEnumerator SpawnPowerupRoutine()
     {
         yield return new WaitForSeconds(3f);

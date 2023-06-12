@@ -52,15 +52,15 @@ public class Enemy : MonoBehaviour
     float _fireRate = 3.0f;
     float _canFire = -1f;
     bool _canFireLasers = false;
-    private int shotAmount;
+    private int _shotAmount;
     SpawnManager _spawnManager;
     bool _isChargedLaserFiring = false;
 
     bool _hasObtainedPlayerPos;
     bool _hasLockedOntoPlayer;
-    float dodgeTimer;
-    private EnemyMissile missile;
-    private Powerup lockedOnPowerup;
+    float _dodgeTimer;
+    private EnemyMissile _missile;
+    private Powerup _lockedOnPowerup;
 
     public int EnemyID { get { return _enemyID; } }
     
@@ -452,22 +452,22 @@ public class Enemy : MonoBehaviour
     IEnumerator StartEnemyPowerupShot(Powerup powerup)
     {
         _canFireLasers = false;
-        if (shotAmount < 1)
+        if (_shotAmount < 1)
         {
-            shotAmount++;
+            _shotAmount++;
             GameObject lockOn = Instantiate(_lockOnVisual, powerup.transform.position, Quaternion.identity);
             lockOn.transform.parent = powerup.transform;
-            lockedOnPowerup = powerup;
+            _lockedOnPowerup = powerup;
             yield return new WaitForSeconds(1f);
             GameObject enemyMissile = Instantiate(_missileToShootAtPowerups, transform.position + _laserOffset, Quaternion.identity);
-            missile = enemyMissile.GetComponent<EnemyMissile>();
-            MissileShooting(lockedOnPowerup);
+            _missile = enemyMissile.GetComponent<EnemyMissile>();
+            MissileShooting(_lockedOnPowerup);
             
-        }else if(shotAmount >= 1)
+        }else if(_shotAmount >= 1)
         {
             _canFireLasers = true;
             yield return new WaitForSeconds(10f);
-            shotAmount = 0;
+            _shotAmount = 0;
             StopAllCoroutines();
         }
         
@@ -476,7 +476,7 @@ public class Enemy : MonoBehaviour
     {
         if (powerup == null)
             return;
-        missile.DetectPowerup(powerup.gameObject.transform);
+        _missile.DetectPowerup(powerup.gameObject.transform);
     }
     public void DodgePlayerShot(Vector3 Direction)
     {
@@ -484,10 +484,10 @@ public class Enemy : MonoBehaviour
     }
     IEnumerator StartDodging(Vector3 Direction)
     {
-        dodgeTimer = 0;
-        while (dodgeTimer < 1f)
+        _dodgeTimer = 0;
+        while (_dodgeTimer < 1f)
         {
-            dodgeTimer += Time.deltaTime;
+            _dodgeTimer += Time.deltaTime;
             transform.Translate(Direction * 2f * Time.deltaTime);
             yield return null;
         }

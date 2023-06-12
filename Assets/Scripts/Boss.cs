@@ -27,7 +27,7 @@ public class Boss : MonoBehaviour
     float _bossSpeed = 2f;
     bool _inSetPosition = false;
     int _direction = 1;
-    float specialAttackTimer;
+    float _specialAttackTimer;
 
     SpawnManager _spawnManager;
     UIManager _uiManager;
@@ -56,7 +56,7 @@ public class Boss : MonoBehaviour
         _uiManager.SetMaxHealth(_bossMaxHP);
         _uiManager.UpdateMaxHealth(_bossCurrentHP);
 
-        specialAttackTimer = 15f;
+        _specialAttackTimer = 15f;
 
         if (_collider2D != null)
             _collider2D.enabled = false;
@@ -152,17 +152,17 @@ public class Boss : MonoBehaviour
 
     void RandomAttack()
     {
-        if (specialAttackTimer <= 0)
+        if (_specialAttackTimer <= 0)
         {
             int value = Random.Range(0, 2);
             switch (value)
             {
-                case 0: FiringBigLasers(); specialAttackTimer = 30f; break;
-                case 1: MissileFiring();  specialAttackTimer = 15f; break;
+                case 0: FiringBigLasers(); _specialAttackTimer = 30f; break;
+                case 1: MissileFiring();  _specialAttackTimer = 15f; break;
             }
         }else
         {
-            specialAttackTimer -= Time.deltaTime;
+            _specialAttackTimer -= Time.deltaTime;
         }
     }
 

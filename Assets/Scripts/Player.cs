@@ -61,7 +61,7 @@ public class Player : MonoBehaviour
     float _canFire = -1f;
     UIManager _uiManager;
     bool _isPlayerEMPed;
-    [SerializeField] PlayerMissile[] availableMissiles;
+    [SerializeField] PlayerMissile[] _availableMissiles;
     
 
     void Start()
